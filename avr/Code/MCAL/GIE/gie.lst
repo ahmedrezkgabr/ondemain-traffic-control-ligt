@@ -1,0 +1,70 @@
+   1               		.file	"gie.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	GIE_enable
+  12               	GIE_enable:
+  13               	.LFB0:
+  14               		.file 1 "../code/MCAL/GIE/gie.c"
+   1:../code/MCAL/GIE/gie.c **** #include "../../UTALITIES/register.h" /*included here to be not accessable to the uper layers*/
+   2:../code/MCAL/GIE/gie.c **** #include "../../UTALITIES/bit.h"      /*included here to be not accessable to the uper layers*/
+   3:../code/MCAL/GIE/gie.c **** 
+   4:../code/MCAL/GIE/gie.c **** #include "gie.h"
+   5:../code/MCAL/GIE/gie.c **** 
+   6:../code/MCAL/GIE/gie.c **** void GIE_enable()
+   7:../code/MCAL/GIE/gie.c **** {
+  15               		.loc 1 7 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+   8:../code/MCAL/GIE/gie.c ****     /* general interrupt enabled by setting bit I in Status Register */
+   9:../code/MCAL/GIE/gie.c ****     SET_BIT(SREG, I);
+  21               		.loc 1 9 0
+  22 0000 8FB7      		in r24,__SREG__
+  23 0002 8068      		ori r24,lo8(-128)
+  24 0004 8FBF      		out __SREG__,r24
+  25 0006 0895      		ret
+  26               		.cfi_endproc
+  27               	.LFE0:
+  29               	.global	GIE_disable
+  31               	GIE_disable:
+  32               	.LFB1:
+  10:../code/MCAL/GIE/gie.c **** }
+  11:../code/MCAL/GIE/gie.c **** 
+  12:../code/MCAL/GIE/gie.c **** void GIE_disable()
+  13:../code/MCAL/GIE/gie.c **** {
+  33               		.loc 1 13 0
+  34               		.cfi_startproc
+  35               	/* prologue: function */
+  36               	/* frame size = 0 */
+  37               	/* stack size = 0 */
+  38               	.L__stack_usage = 0
+  14:../code/MCAL/GIE/gie.c ****     /* general interrupt enabled by clearing bit I in Status Register */
+  15:../code/MCAL/GIE/gie.c ****     CLR_BIT(SREG, I);
+  39               		.loc 1 15 0
+  40 0008 8FB7      		in r24,__SREG__
+  41 000a 8F77      		andi r24,lo8(127)
+  42 000c 8FBF      		out __SREG__,r24
+  43 000e 0895      		ret
+  44               		.cfi_endproc
+  45               	.LFE1:
+  47               	.Letext0:
+  48               		.file 2 "../code/MCAL/GIE/../../UTALITIES/types.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 gie.c
+     /tmp/ccfKJkkw.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccfKJkkw.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccfKJkkw.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccfKJkkw.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccfKJkkw.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccfKJkkw.s:12     .text:0000000000000000 GIE_enable
+     /tmp/ccfKJkkw.s:31     .text:0000000000000008 GIE_disable
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,51 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               		.section	.text.startup,"ax",@progbits
+  11               	.global	main
+  13               	main:
+  14               	.LFB0:
+  15               		.file 1 "../code/main.c"
+   1:../code/main.c **** #include "APPLICATION/app.h"
+   2:../code/main.c **** 
+   3:../code/main.c **** int main(void)
+   4:../code/main.c **** {
+  16               		.loc 1 4 0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+   5:../code/main.c ****     /*starting the application*/
+   6:../code/main.c ****     APP_start();
+  22               		.loc 1 6 0
+  23 0000 0E94 0000 		call APP_start
+  24               	.LVL0:
+   7:../code/main.c ****     return 0;
+   8:../code/main.c **** }...
+  25               		.loc 1 8 0
+  26 0004 80E0      		ldi r24,0
+  27 0006 90E0      		ldi r25,0
+  28 0008 0895      		ret
+  29               		.cfi_endproc
+  30               	.LFE0:
+  32               		.text
+  33               	.Letext0:
+  34               		.file 2 "../code/APPLICATION/app.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccI4yp9Z.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccI4yp9Z.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccI4yp9Z.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccI4yp9Z.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccI4yp9Z.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccI4yp9Z.s:13     .text.startup:0000000000000000 main
+
+UNDEFINED SYMBOLS
+APP_start

@@ -1,0 +1,502 @@
+   1               		.file	"keypad.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	KEYPAD_init
+  12               	KEYPAD_init:
+  13               	.LFB0:
+  14               		.file 1 "../code/ECUAL/KEYPAD/keypad.c"
+   1:../code/ECUAL/KEYPAD/keypad.c **** #include "keypad.h"
+   2:../code/ECUAL/KEYPAD/keypad.c **** 
+   3:../code/ECUAL/KEYPAD/keypad.c **** void KEYPAD_init(void)
+   4:../code/ECUAL/KEYPAD/keypad.c **** {
+  15               		.loc 1 4 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+   5:../code/ECUAL/KEYPAD/keypad.c ****     /* function skeleton
+   6:../code/ECUAL/KEYPAD/keypad.c ****      * 1-init the column pins to be OUT
+   7:../code/ECUAL/KEYPAD/keypad.c ****      * 2-SET the colum pins to HIGH
+   8:../code/ECUAL/KEYPAD/keypad.c ****      * 3-init the row pins to be IN
+   9:../code/ECUAL/KEYPAD/keypad.c ****      * 4-SET the row pins to HIGH to activate the internal pullup resistors
+  10:../code/ECUAL/KEYPAD/keypad.c ****      */
+  11:../code/ECUAL/KEYPAD/keypad.c **** 
+  12:../code/ECUAL/KEYPAD/keypad.c ****     /* 1-init the column pins to be OUT */
+  13:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_COLUMN0_PIN, KPD_PORT, OUT);
+  21               		.loc 1 13 0
+  22 0000 41E0      		ldi r20,lo8(1)
+  23 0002 63E4      		ldi r22,lo8(67)
+  24 0004 80E0      		ldi r24,0
+  25 0006 0E94 0000 		call GPIO_initPin
+  26               	.LVL0:
+  14:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_COLUMN1_PIN, KPD_PORT, OUT);
+  27               		.loc 1 14 0
+  28 000a 41E0      		ldi r20,lo8(1)
+  29 000c 63E4      		ldi r22,lo8(67)
+  30 000e 81E0      		ldi r24,lo8(1)
+  31 0010 0E94 0000 		call GPIO_initPin
+  32               	.LVL1:
+  15:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_COLUMN2_PIN, KPD_PORT, OUT);
+  33               		.loc 1 15 0
+  34 0014 41E0      		ldi r20,lo8(1)
+  35 0016 63E4      		ldi r22,lo8(67)
+  36 0018 82E0      		ldi r24,lo8(2)
+  37 001a 0E94 0000 		call GPIO_initPin
+  38               	.LVL2:
+  16:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_COLUMN3_PIN, KPD_PORT, OUT);
+  39               		.loc 1 16 0
+  40 001e 41E0      		ldi r20,lo8(1)
+  41 0020 63E4      		ldi r22,lo8(67)
+  42 0022 83E0      		ldi r24,lo8(3)
+  43 0024 0E94 0000 		call GPIO_initPin
+  44               	.LVL3:
+  17:../code/ECUAL/KEYPAD/keypad.c **** 
+  18:../code/ECUAL/KEYPAD/keypad.c ****     /* 2-SET the colum pins to HIGH */
+  19:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_COLUMN0_PIN, KPD_PORT, HIGH);
+  45               		.loc 1 19 0
+  46 0028 41E0      		ldi r20,lo8(1)
+  47 002a 63E4      		ldi r22,lo8(67)
+  48 002c 80E0      		ldi r24,0
+  49 002e 0E94 0000 		call GPIO_writePin
+  50               	.LVL4:
+  20:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_COLUMN1_PIN, KPD_PORT, HIGH);
+  51               		.loc 1 20 0
+  52 0032 41E0      		ldi r20,lo8(1)
+  53 0034 63E4      		ldi r22,lo8(67)
+  54 0036 81E0      		ldi r24,lo8(1)
+  55 0038 0E94 0000 		call GPIO_writePin
+  56               	.LVL5:
+  21:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_COLUMN2_PIN, KPD_PORT, HIGH);
+  57               		.loc 1 21 0
+  58 003c 41E0      		ldi r20,lo8(1)
+  59 003e 63E4      		ldi r22,lo8(67)
+  60 0040 82E0      		ldi r24,lo8(2)
+  61 0042 0E94 0000 		call GPIO_writePin
+  62               	.LVL6:
+  22:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_COLUMN3_PIN, KPD_PORT, HIGH);
+  63               		.loc 1 22 0
+  64 0046 41E0      		ldi r20,lo8(1)
+  65 0048 63E4      		ldi r22,lo8(67)
+  66 004a 83E0      		ldi r24,lo8(3)
+  67 004c 0E94 0000 		call GPIO_writePin
+  68               	.LVL7:
+  23:../code/ECUAL/KEYPAD/keypad.c **** 
+  24:../code/ECUAL/KEYPAD/keypad.c ****     /* 3-init the row pins to be IN */
+  25:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_ROW0_PIN, KPD_PORT, IN);
+  69               		.loc 1 25 0
+  70 0050 40E0      		ldi r20,0
+  71 0052 63E4      		ldi r22,lo8(67)
+  72 0054 84E0      		ldi r24,lo8(4)
+  73 0056 0E94 0000 		call GPIO_initPin
+  74               	.LVL8:
+  26:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_ROW1_PIN, KPD_PORT, IN);
+  75               		.loc 1 26 0
+  76 005a 40E0      		ldi r20,0
+  77 005c 63E4      		ldi r22,lo8(67)
+  78 005e 85E0      		ldi r24,lo8(5)
+  79 0060 0E94 0000 		call GPIO_initPin
+  80               	.LVL9:
+  27:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_ROW2_PIN, KPD_PORT, IN);
+  81               		.loc 1 27 0
+  82 0064 40E0      		ldi r20,0
+  83 0066 63E4      		ldi r22,lo8(67)
+  84 0068 86E0      		ldi r24,lo8(6)
+  85 006a 0E94 0000 		call GPIO_initPin
+  86               	.LVL10:
+  28:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_initPin(KPD_ROW3_PIN, KPD_PORT, IN);
+  87               		.loc 1 28 0
+  88 006e 40E0      		ldi r20,0
+  89 0070 63E4      		ldi r22,lo8(67)
+  90 0072 87E0      		ldi r24,lo8(7)
+  91 0074 0E94 0000 		call GPIO_initPin
+  92               	.LVL11:
+  29:../code/ECUAL/KEYPAD/keypad.c **** 
+  30:../code/ECUAL/KEYPAD/keypad.c ****     /* 4-SET the row pins to HIGH to activate the internal pullup resistors */
+  31:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_ROW0_PIN, KPD_PORT, HIGH);
+  93               		.loc 1 31 0
+  94 0078 41E0      		ldi r20,lo8(1)
+  95 007a 63E4      		ldi r22,lo8(67)
+  96 007c 84E0      		ldi r24,lo8(4)
+  97 007e 0E94 0000 		call GPIO_writePin
+  98               	.LVL12:
+  32:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_ROW1_PIN, KPD_PORT, HIGH);
+  99               		.loc 1 32 0
+ 100 0082 41E0      		ldi r20,lo8(1)
+ 101 0084 63E4      		ldi r22,lo8(67)
+ 102 0086 85E0      		ldi r24,lo8(5)
+ 103 0088 0E94 0000 		call GPIO_writePin
+ 104               	.LVL13:
+  33:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_ROW2_PIN, KPD_PORT, HIGH);
+ 105               		.loc 1 33 0
+ 106 008c 41E0      		ldi r20,lo8(1)
+ 107 008e 63E4      		ldi r22,lo8(67)
+ 108 0090 86E0      		ldi r24,lo8(6)
+ 109 0092 0E94 0000 		call GPIO_writePin
+ 110               	.LVL14:
+  34:../code/ECUAL/KEYPAD/keypad.c ****     GPIO_writePin(KPD_ROW3_PIN, KPD_PORT, HIGH);
+ 111               		.loc 1 34 0
+ 112 0096 41E0      		ldi r20,lo8(1)
+ 113 0098 63E4      		ldi r22,lo8(67)
+ 114 009a 87E0      		ldi r24,lo8(7)
+ 115 009c 0C94 0000 		jmp GPIO_writePin
+ 116               	.LVL15:
+ 117               		.cfi_endproc
+ 118               	.LFE0:
+ 120               		.section	.rodata
+ 121               	.LC0:
+ 122 0000 37        		.byte	55
+ 123 0001 38        		.byte	56
+ 124 0002 39        		.byte	57
+ 125 0003 2F        		.byte	47
+ 126 0004 34        		.byte	52
+ 127 0005 35        		.byte	53
+ 128 0006 36        		.byte	54
+ 129 0007 2A        		.byte	42
+ 130 0008 31        		.byte	49
+ 131 0009 32        		.byte	50
+ 132 000a 33        		.byte	51
+ 133 000b 2D        		.byte	45
+ 134 000c 43        		.byte	67
+ 135 000d 30        		.byte	48
+ 136 000e 3D        		.byte	61
+ 137 000f 2B        		.byte	43
+ 138               	.LC1:
+ 139 0010 00        		.byte	0
+ 140 0011 01        		.byte	1
+ 141 0012 02        		.byte	2
+ 142 0013 03        		.byte	3
+ 143               	.LC2:
+ 144 0014 04        		.byte	4
+ 145 0015 05        		.byte	5
+ 146 0016 06        		.byte	6
+ 147 0017 07        		.byte	7
+ 148               		.text
+ 149               	.global	KEYPAD_getPressedKey
+ 151               	KEYPAD_getPressedKey:
+ 152               	.LFB1:
+  35:../code/ECUAL/KEYPAD/keypad.c **** }
+  36:../code/ECUAL/KEYPAD/keypad.c **** 
+  37:../code/ECUAL/KEYPAD/keypad.c **** uint8_t KEYPAD_getPressedKey(void)
+  38:../code/ECUAL/KEYPAD/keypad.c **** {
+ 153               		.loc 1 38 0
+ 154               		.cfi_startproc
+ 155 00a0 8F92      		push r8
+ 156               	.LCFI0:
+ 157               		.cfi_def_cfa_offset 3
+ 158               		.cfi_offset 8, -2
+ 159 00a2 9F92      		push r9
+ 160               	.LCFI1:
+ 161               		.cfi_def_cfa_offset 4
+ 162               		.cfi_offset 9, -3
+ 163 00a4 AF92      		push r10
+ 164               	.LCFI2:
+ 165               		.cfi_def_cfa_offset 5
+ 166               		.cfi_offset 10, -4
+ 167 00a6 BF92      		push r11
+ 168               	.LCFI3:
+ 169               		.cfi_def_cfa_offset 6
+ 170               		.cfi_offset 11, -5
+ 171 00a8 CF92      		push r12
+ 172               	.LCFI4:
+ 173               		.cfi_def_cfa_offset 7
+ 174               		.cfi_offset 12, -6
+ 175 00aa DF92      		push r13
+ 176               	.LCFI5:
+ 177               		.cfi_def_cfa_offset 8
+ 178               		.cfi_offset 13, -7
+ 179 00ac EF92      		push r14
+ 180               	.LCFI6:
+ 181               		.cfi_def_cfa_offset 9
+ 182               		.cfi_offset 14, -8
+ 183 00ae FF92      		push r15
+ 184               	.LCFI7:
+ 185               		.cfi_def_cfa_offset 10
+ 186               		.cfi_offset 15, -9
+ 187 00b0 0F93      		push r16
+ 188               	.LCFI8:
+ 189               		.cfi_def_cfa_offset 11
+ 190               		.cfi_offset 16, -10
+ 191 00b2 1F93      		push r17
+ 192               	.LCFI9:
+ 193               		.cfi_def_cfa_offset 12
+ 194               		.cfi_offset 17, -11
+ 195 00b4 CF93      		push r28
+ 196               	.LCFI10:
+ 197               		.cfi_def_cfa_offset 13
+ 198               		.cfi_offset 28, -12
+ 199 00b6 DF93      		push r29
+ 200               	.LCFI11:
+ 201               		.cfi_def_cfa_offset 14
+ 202               		.cfi_offset 29, -13
+ 203 00b8 CDB7      		in r28,__SP_L__
+ 204 00ba DEB7      		in r29,__SP_H__
+ 205               	.LCFI12:
+ 206               		.cfi_def_cfa_register 28
+ 207 00bc 6997      		sbiw r28,25
+ 208               	.LCFI13:
+ 209               		.cfi_def_cfa_offset 39
+ 210 00be 0FB6      		in __tmp_reg__,__SREG__
+ 211 00c0 F894      		cli
+ 212 00c2 DEBF      		out __SP_H__,r29
+ 213 00c4 0FBE      		out __SREG__,__tmp_reg__
+ 214 00c6 CDBF      		out __SP_L__,r28
+ 215               	/* prologue: function */
+ 216               	/* frame size = 25 */
+ 217               	/* stack size = 37 */
+ 218               	.L__stack_usage = 37
+ 219               	.LVL16:
+  39:../code/ECUAL/KEYPAD/keypad.c ****     /* function skeleton
+  40:../code/ECUAL/KEYPAD/keypad.c ****      * 1-declare the function local variables
+  41:../code/ECUAL/KEYPAD/keypad.c ****      * 2-iterate over the columns
+  42:../code/ECUAL/KEYPAD/keypad.c ****      *      2.1-in each iteration SET the corresponding pin as LOW
+  43:../code/ECUAL/KEYPAD/keypad.c ****      *      2.2-iterate over the rows
+  44:../code/ECUAL/KEYPAD/keypad.c ****      *          2.2.1-in each iteration check read the corresponding pin
+  45:../code/ECUAL/KEYPAD/keypad.c ****      *              2.2.1.1-if it is LOW, then the corresponding key is pressed
+  46:../code/ECUAL/KEYPAD/keypad.c ****      *                  2.2.1.1.1-wait for long press
+  47:../code/ECUAL/KEYPAD/keypad.c ****      *                  2.2.1.1.2-SET the column again to HIGH
+  48:../code/ECUAL/KEYPAD/keypad.c ****      *                  2.2.1.1.3 return the pressedKey
+  49:../code/ECUAL/KEYPAD/keypad.c ****      *      2.3-if no keys in this column pressed, SET the column again to HIGH
+  50:../code/ECUAL/KEYPAD/keypad.c ****      * 3-return the pressedKey (NOT_PRESSED)
+  51:../code/ECUAL/KEYPAD/keypad.c ****      */
+  52:../code/ECUAL/KEYPAD/keypad.c **** 
+  53:../code/ECUAL/KEYPAD/keypad.c ****     /* 1-declare the function local variables */
+  54:../code/ECUAL/KEYPAD/keypad.c ****     uint8_t pressedKey = NOT_PRESSED;
+  55:../code/ECUAL/KEYPAD/keypad.c ****     uint8_t keysArray[COLUMN_SIZE][ROW_SIZE] = KPD_ARR;
+ 220               		.loc 1 55 0
+ 221 00c8 80E1      		ldi r24,lo8(16)
+ 222 00ca E0E0      		ldi r30,lo8(.LC0)
+ 223 00cc F0E0      		ldi r31,hi8(.LC0)
+ 224 00ce DE01      		movw r26,r28
+ 225 00d0 1196      		adiw r26,1
+ 226               		0:
+ 227 00d2 0190      		ld r0,Z+
+ 228 00d4 0D92      		st X+,r0
+ 229 00d6 8A95      		dec r24
+ 230 00d8 01F4      		brne 0b
+  56:../code/ECUAL/KEYPAD/keypad.c ****     uint8_t columnIndx, rowIndx;
+  57:../code/ECUAL/KEYPAD/keypad.c ****     EN_value_t state = HIGH;
+ 231               		.loc 1 57 0
+ 232 00da 81E0      		ldi r24,lo8(1)
+ 233 00dc 898F      		std Y+25,r24
+  58:../code/ECUAL/KEYPAD/keypad.c **** 
+  59:../code/ECUAL/KEYPAD/keypad.c ****     uint8_t columnsArray[] = {KPD_COLUMN0_PIN, KPD_COLUMN1_PIN, KPD_COLUMN2_PIN, KPD_COLUMN3_PIN};
+ 234               		.loc 1 59 0
+ 235 00de 8091 0000 		lds r24,.LC1
+ 236 00e2 9091 0000 		lds r25,.LC1+1
+ 237 00e6 A091 0000 		lds r26,.LC1+2
+ 238 00ea B091 0000 		lds r27,.LC1+3
+ 239 00ee 8D8B      		std Y+21,r24
+ 240 00f0 9E8B      		std Y+22,r25
+ 241 00f2 AF8B      		std Y+23,r26
+ 242 00f4 B88F      		std Y+24,r27
+  60:../code/ECUAL/KEYPAD/keypad.c **** 
+  61:../code/ECUAL/KEYPAD/keypad.c ****     uint8_t rowsArray[] = {KPD_ROW0_PIN, KPD_ROW1_PIN, KPD_ROW2_PIN, KPD_ROW3_PIN};
+ 243               		.loc 1 61 0
+ 244 00f6 8091 0000 		lds r24,.LC2
+ 245 00fa 9091 0000 		lds r25,.LC2+1
+ 246 00fe A091 0000 		lds r26,.LC2+2
+ 247 0102 B091 0000 		lds r27,.LC2+3
+ 248 0106 898B      		std Y+17,r24
+ 249 0108 9A8B      		std Y+18,r25
+ 250 010a AB8B      		std Y+19,r26
+ 251 010c BC8B      		std Y+20,r27
+ 252               	.LVL17:
+ 253 010e 5E01      		movw r10,r28
+ 254 0110 85E1      		ldi r24,21
+ 255 0112 A80E      		add r10,r24
+ 256 0114 B11C      		adc r11,__zero_reg__
+ 257 0116 E12C      		mov r14,__zero_reg__
+ 258 0118 F12C      		mov r15,__zero_reg__
+ 259               	.LVL18:
+ 260               	.L8:
+  62:../code/ECUAL/KEYPAD/keypad.c **** 
+  63:../code/ECUAL/KEYPAD/keypad.c ****     /* 2-iterate over the columns */
+  64:../code/ECUAL/KEYPAD/keypad.c ****     for (columnIndx = 0; columnIndx < COLUMN_SIZE; columnIndx++)
+  65:../code/ECUAL/KEYPAD/keypad.c ****     {
+  66:../code/ECUAL/KEYPAD/keypad.c ****         /* 2.1-in each iteration SET the corresponding pin as LOW */
+  67:../code/ECUAL/KEYPAD/keypad.c ****         GPIO_writePin(columnsArray[columnIndx], KPD_PORT, LOW);
+ 261               		.loc 1 67 0
+ 262 011a F501      		movw r30,r10
+ 263 011c D190      		ld r13,Z+
+ 264 011e 5F01      		movw r10,r30
+ 265 0120 40E0      		ldi r20,0
+ 266 0122 63E4      		ldi r22,lo8(67)
+ 267 0124 8D2D      		mov r24,r13
+ 268 0126 0E94 0000 		call GPIO_writePin
+ 269               	.LVL19:
+ 270 012a 4E01      		movw r8,r28
+ 271 012c F1E1      		ldi r31,17
+ 272 012e 8F0E      		add r8,r31
+ 273 0130 911C      		adc r9,__zero_reg__
+ 274 0132 00E0      		ldi r16,0
+ 275 0134 10E0      		ldi r17,0
+ 276               	.LVL20:
+ 277               	.L7:
+  68:../code/ECUAL/KEYPAD/keypad.c **** 
+  69:../code/ECUAL/KEYPAD/keypad.c ****         /* 2.2-iterate over the rows */
+  70:../code/ECUAL/KEYPAD/keypad.c ****         for (rowIndx = 0; rowIndx < ROW_SIZE; rowIndx++)
+  71:../code/ECUAL/KEYPAD/keypad.c ****         {
+  72:../code/ECUAL/KEYPAD/keypad.c ****             /* 2.2.1-in each iteration check read the corresponding pin */
+  73:../code/ECUAL/KEYPAD/keypad.c ****             GPIO_readPin(rowsArray[rowIndx], KPD_PORT, &state);
+ 278               		.loc 1 73 0
+ 279 0136 F401      		movw r30,r8
+ 280 0138 C190      		ld r12,Z+
+ 281 013a 4F01      		movw r8,r30
+ 282 013c AE01      		movw r20,r28
+ 283 013e 475E      		subi r20,-25
+ 284 0140 5F4F      		sbci r21,-1
+ 285 0142 63E4      		ldi r22,lo8(67)
+ 286 0144 8C2D      		mov r24,r12
+ 287 0146 0E94 0000 		call GPIO_readPin
+ 288               	.LVL21:
+  74:../code/ECUAL/KEYPAD/keypad.c **** 
+  75:../code/ECUAL/KEYPAD/keypad.c ****             /*  2.2.1.1-if it is LOW, then the corresponding key is pressed */
+  76:../code/ECUAL/KEYPAD/keypad.c ****             if (state == LOW) /*key pressed*/
+ 289               		.loc 1 76 0
+ 290 014a 898D      		ldd r24,Y+25
+ 291 014c 8111      		cpse r24,__zero_reg__
+ 292 014e 00C0      		rjmp .L3
+  77:../code/ECUAL/KEYPAD/keypad.c ****             {
+  78:../code/ECUAL/KEYPAD/keypad.c ****                 pressedKey = keysArray[rowIndx][columnIndx];
+ 293               		.loc 1 78 0
+ 294 0150 F801      		movw r30,r16
+ 295 0152 EE0F      		lsl r30
+ 296 0154 FF1F      		rol r31
+ 297 0156 EE0F      		lsl r30
+ 298 0158 FF1F      		rol r31
+ 299 015a 81E0      		ldi r24,lo8(1)
+ 300 015c 90E0      		ldi r25,0
+ 301 015e 8C0F      		add r24,r28
+ 302 0160 9D1F      		adc r25,r29
+ 303 0162 E80F      		add r30,r24
+ 304 0164 F91F      		adc r31,r25
+ 305 0166 EE0D      		add r30,r14
+ 306 0168 FF1D      		adc r31,r15
+ 307 016a 1081      		ld r17,Z
+ 308               	.LVL22:
+ 309               	.L4:
+  79:../code/ECUAL/KEYPAD/keypad.c **** 
+  80:../code/ECUAL/KEYPAD/keypad.c ****                 /* 2.2.1.1.1-wait for long press */
+  81:../code/ECUAL/KEYPAD/keypad.c ****                 while (state == LOW)
+ 310               		.loc 1 81 0
+ 311 016c 898D      		ldd r24,Y+25
+ 312 016e 8111      		cpse r24,__zero_reg__
+ 313 0170 00C0      		rjmp .L12
+  82:../code/ECUAL/KEYPAD/keypad.c ****                 {
+  83:../code/ECUAL/KEYPAD/keypad.c **** 
+  84:../code/ECUAL/KEYPAD/keypad.c ****                     GPIO_readPin(rowsArray[rowIndx], KPD_PORT, &state);
+ 314               		.loc 1 84 0
+ 315 0172 AE01      		movw r20,r28
+ 316 0174 475E      		subi r20,-25
+ 317 0176 5F4F      		sbci r21,-1
+ 318 0178 63E4      		ldi r22,lo8(67)
+ 319 017a 8C2D      		mov r24,r12
+ 320 017c 0E94 0000 		call GPIO_readPin
+ 321               	.LVL23:
+ 322 0180 00C0      		rjmp .L4
+ 323               	.L12:
+  85:../code/ECUAL/KEYPAD/keypad.c ****                 }
+  86:../code/ECUAL/KEYPAD/keypad.c **** 
+  87:../code/ECUAL/KEYPAD/keypad.c ****                 /* 2.2.1.1.2-SET the column again to HIGH */
+  88:../code/ECUAL/KEYPAD/keypad.c ****                 GPIO_writePin(columnsArray[columnIndx], KPD_PORT, HIGH);
+ 324               		.loc 1 88 0
+ 325 0182 41E0      		ldi r20,lo8(1)
+ 326 0184 63E4      		ldi r22,lo8(67)
+ 327 0186 8D2D      		mov r24,r13
+ 328 0188 0E94 0000 		call GPIO_writePin
+ 329               	.LVL24:
+  89:../code/ECUAL/KEYPAD/keypad.c **** 
+  90:../code/ECUAL/KEYPAD/keypad.c ****                 /* 2.2.1.1.3 return the pressedKey */
+  91:../code/ECUAL/KEYPAD/keypad.c ****                 return pressedKey;
+ 330               		.loc 1 91 0
+ 331 018c 812F      		mov r24,r17
+ 332 018e 00C0      		rjmp .L6
+ 333               	.LVL25:
+ 334               	.L3:
+ 335 0190 0F5F      		subi r16,-1
+ 336 0192 1F4F      		sbci r17,-1
+ 337               	.LVL26:
+  70:../code/ECUAL/KEYPAD/keypad.c ****         {
+ 338               		.loc 1 70 0 discriminator 2
+ 339 0194 0430      		cpi r16,4
+ 340 0196 1105      		cpc r17,__zero_reg__
+ 341 0198 01F4      		brne .L7
+  92:../code/ECUAL/KEYPAD/keypad.c ****             }
+  93:../code/ECUAL/KEYPAD/keypad.c ****         }
+  94:../code/ECUAL/KEYPAD/keypad.c **** 
+  95:../code/ECUAL/KEYPAD/keypad.c ****         /* 2.3-if no keys in this column pressed, SET the column again to HIGH */
+  96:../code/ECUAL/KEYPAD/keypad.c ****         GPIO_writePin(columnsArray[columnIndx], KPD_PORT, HIGH);
+ 342               		.loc 1 96 0 discriminator 2
+ 343 019a 41E0      		ldi r20,lo8(1)
+ 344 019c 63E4      		ldi r22,lo8(67)
+ 345 019e 8D2D      		mov r24,r13
+ 346 01a0 0E94 0000 		call GPIO_writePin
+ 347               	.LVL27:
+ 348 01a4 9FEF      		ldi r25,-1
+ 349 01a6 E91A      		sub r14,r25
+ 350 01a8 F90A      		sbc r15,r25
+ 351               	.LVL28:
+  64:../code/ECUAL/KEYPAD/keypad.c ****     {
+ 352               		.loc 1 64 0 discriminator 2
+ 353 01aa E4E0      		ldi r30,4
+ 354 01ac EE16      		cp r14,r30
+ 355 01ae F104      		cpc r15,__zero_reg__
+ 356 01b0 01F0      		breq .+2
+ 357 01b2 00C0      		rjmp .L8
+  97:../code/ECUAL/KEYPAD/keypad.c ****     }
+  98:../code/ECUAL/KEYPAD/keypad.c **** 
+  99:../code/ECUAL/KEYPAD/keypad.c ****     /* 3-return the pressedKey (NOT_PRESSED) */
+ 100:../code/ECUAL/KEYPAD/keypad.c ****     return pressedKey;
+ 358               		.loc 1 100 0
+ 359 01b4 85E6      		ldi r24,lo8(101)
+ 360               	.LVL29:
+ 361               	.L6:
+ 362               	/* epilogue start */
+ 101:../code/ECUAL/KEYPAD/keypad.c **** }...
+ 363               		.loc 1 101 0
+ 364 01b6 6996      		adiw r28,25
+ 365 01b8 0FB6      		in __tmp_reg__,__SREG__
+ 366 01ba F894      		cli
+ 367 01bc DEBF      		out __SP_H__,r29
+ 368 01be 0FBE      		out __SREG__,__tmp_reg__
+ 369 01c0 CDBF      		out __SP_L__,r28
+ 370 01c2 DF91      		pop r29
+ 371 01c4 CF91      		pop r28
+ 372 01c6 1F91      		pop r17
+ 373 01c8 0F91      		pop r16
+ 374 01ca FF90      		pop r15
+ 375 01cc EF90      		pop r14
+ 376 01ce DF90      		pop r13
+ 377 01d0 CF90      		pop r12
+ 378 01d2 BF90      		pop r11
+ 379 01d4 AF90      		pop r10
+ 380 01d6 9F90      		pop r9
+ 381 01d8 8F90      		pop r8
+ 382 01da 0895      		ret
+ 383               		.cfi_endproc
+ 384               	.LFE1:
+ 386               	.Letext0:
+ 387               		.file 2 "../code/ECUAL/KEYPAD/../../MCAL/GPIO/gpio.h"
+ 388               		.file 3 "../code/ECUAL/KEYPAD/../../MCAL/GPIO/../../UTALITIES/types.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 keypad.c
+     /tmp/ccMuu2yr.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccMuu2yr.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccMuu2yr.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccMuu2yr.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccMuu2yr.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccMuu2yr.s:12     .text:0000000000000000 KEYPAD_init
+     /tmp/ccMuu2yr.s:151    .text:00000000000000a0 KEYPAD_getPressedKey
+
+UNDEFINED SYMBOLS
+GPIO_initPin
+GPIO_writePin
+GPIO_readPin
+__do_copy_data

@@ -1,0 +1,1402 @@
+   1               		.file	"gpio.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	GPIO_initPin
+  12               	GPIO_initPin:
+  13               	.LFB0:
+  14               		.file 1 "../code/MCAL/GPIO/gpio.c"
+   1:../code/MCAL/GPIO/gpio.c **** #include "../../UTALITIES/bit.h"      /*included here to be not accessable to the uper layers*/
+   2:../code/MCAL/GPIO/gpio.c **** #include "../../UTALITIES/register.h" /*included here to be not accessable to the uper layers*/
+   3:../code/MCAL/GPIO/gpio.c **** #include "gpio.h"
+   4:../code/MCAL/GPIO/gpio.c **** 
+   5:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_initPin(EN_pin_t pinNumber, EN_port_t portNumber, EN_direction_t direction)
+   6:../code/MCAL/GPIO/gpio.c **** {
+  15               		.loc 1 6 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+   7:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+   8:../code/MCAL/GPIO/gpio.c ****      * 1-check if the pin is available
+   9:../code/MCAL/GPIO/gpio.c ****      * 2-switch over the portNumber
+  10:../code/MCAL/GPIO/gpio.c ****      *     2.1-in each case check the direction
+  11:../code/MCAL/GPIO/gpio.c ****      *         2.1.1-if the direction IN, CLR the corresponding bit in DDRx
+  12:../code/MCAL/GPIO/gpio.c ****      *         2.1.2-if the direction OUT, SET the corresponding bit in DDRx
+  13:../code/MCAL/GPIO/gpio.c ****      *         2.1.3-if not IN or OUT, then WRONG_DIRECTION
+  14:../code/MCAL/GPIO/gpio.c ****      *     2.2-if not A, B, C, or D, then WRONG_PORT
+  15:../code/MCAL/GPIO/gpio.c ****      *  3-return the result
+  16:../code/MCAL/GPIO/gpio.c ****      */
+  17:../code/MCAL/GPIO/gpio.c **** 
+  18:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+  19:../code/MCAL/GPIO/gpio.c ****     if ((pinNumber < PIN_0) || (pinNumber > PIN_7))
+  22               		.loc 1 19 0
+  23 0000 8830      		cpi r24,lo8(8)
+  24 0002 00F0      		brlo .L27
+  25 0004 81E0      		ldi r24,lo8(1)
+  26               	.LVL1:
+  27 0006 0895      		ret
+  28               	.LVL2:
+  29               	.L27:
+  20:../code/MCAL/GPIO/gpio.c ****     {
+  21:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PIN;
+  22:../code/MCAL/GPIO/gpio.c ****     }
+  23:../code/MCAL/GPIO/gpio.c **** 
+  24:../code/MCAL/GPIO/gpio.c ****     if (ret == GPIO_OK)
+  25:../code/MCAL/GPIO/gpio.c ****     {
+  26:../code/MCAL/GPIO/gpio.c ****         switch (portNumber)
+  30               		.loc 1 26 0
+  31 0008 6234      		cpi r22,lo8(66)
+  32 000a 01F4      		brne .L28
+  27:../code/MCAL/GPIO/gpio.c ****         {
+  28:../code/MCAL/GPIO/gpio.c ****         case PORT_A:
+  29:../code/MCAL/GPIO/gpio.c ****             if (direction == IN)
+  30:../code/MCAL/GPIO/gpio.c ****             {
+  31:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(DDRA, pinNumber);
+  32:../code/MCAL/GPIO/gpio.c ****             }
+  33:../code/MCAL/GPIO/gpio.c ****             else if (direction == OUT)
+  34:../code/MCAL/GPIO/gpio.c ****             {
+  35:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(DDRA, pinNumber);
+  36:../code/MCAL/GPIO/gpio.c ****             }
+  37:../code/MCAL/GPIO/gpio.c ****             else
+  38:../code/MCAL/GPIO/gpio.c ****             {
+  39:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_DIRECTION;
+  40:../code/MCAL/GPIO/gpio.c ****             }
+  41:../code/MCAL/GPIO/gpio.c ****             break;
+  42:../code/MCAL/GPIO/gpio.c **** 
+  43:../code/MCAL/GPIO/gpio.c ****         case PORT_B:
+  44:../code/MCAL/GPIO/gpio.c ****             if (direction == IN)
+  33               		.loc 1 44 0
+  34 000c 4111      		cpse r20,__zero_reg__
+  35 000e 00C0      		rjmp .L7
+  45:../code/MCAL/GPIO/gpio.c ****             {
+  46:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(DDRB, pinNumber);
+  36               		.loc 1 46 0
+  37 0010 47B3      		in r20,0x17
+  38               	.LVL3:
+  39 0012 21E0      		ldi r18,lo8(1)
+  40 0014 30E0      		ldi r19,0
+  41 0016 B901      		movw r22,r18
+  42               	.LVL4:
+  43 0018 00C0      		rjmp 2f
+  44               		1:
+  45 001a 660F      		lsl r22
+  46 001c 771F      		rol r23
+  47               		2:
+  48 001e 8A95      		dec r24
+  49 0020 02F4      		brpl 1b
+  50 0022 CB01      		movw r24,r22
+  51               	.LVL5:
+  52 0024 8095      		com r24
+  53 0026 8423      		and r24,r20
+  54 0028 00C0      		rjmp .L24
+  55               	.LVL6:
+  56               	.L7:
+  47:../code/MCAL/GPIO/gpio.c ****             }
+  48:../code/MCAL/GPIO/gpio.c ****             else if (direction == OUT)
+  57               		.loc 1 48 0
+  58 002a 4130      		cpi r20,lo8(1)
+  59 002c 01F4      		brne .L17
+  49:../code/MCAL/GPIO/gpio.c ****             {
+  50:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(DDRB, pinNumber);
+  60               		.loc 1 50 0
+  61 002e 47B3      		in r20,0x17
+  62               	.LVL7:
+  63 0030 21E0      		ldi r18,lo8(1)
+  64 0032 30E0      		ldi r19,0
+  65 0034 B901      		movw r22,r18
+  66               	.LVL8:
+  67 0036 00C0      		rjmp 2f
+  68               		1:
+  69 0038 660F      		lsl r22
+  70 003a 771F      		rol r23
+  71               		2:
+  72 003c 8A95      		dec r24
+  73 003e 02F4      		brpl 1b
+  74 0040 CB01      		movw r24,r22
+  75               	.LVL9:
+  76 0042 842B      		or r24,r20
+  77               	.L24:
+  78 0044 87BB      		out 0x17,r24
+  79               	.L22:
+  80 0046 80E0      		ldi r24,0
+  81 0048 0895      		ret
+  82               	.LVL10:
+  83               	.L17:
+  39:../code/MCAL/GPIO/gpio.c ****             }
+  84               		.loc 1 39 0
+  85 004a 83E0      		ldi r24,lo8(3)
+  86               	.LVL11:
+  87 004c 0895      		ret
+  88               	.LVL12:
+  89               	.L28:
+  26:../code/MCAL/GPIO/gpio.c ****         {
+  90               		.loc 1 26 0
+  91 004e 6334      		cpi r22,lo8(67)
+  92 0050 00F4      		brsh .L12
+  93 0052 6134      		cpi r22,lo8(65)
+  94 0054 01F4      		brne .L18
+  29:../code/MCAL/GPIO/gpio.c ****             {
+  95               		.loc 1 29 0
+  96 0056 4111      		cpse r20,__zero_reg__
+  97 0058 00C0      		rjmp .L5
+  31:../code/MCAL/GPIO/gpio.c ****             }
+  98               		.loc 1 31 0
+  99 005a 4AB3      		in r20,0x1a
+ 100               	.LVL13:
+ 101 005c 21E0      		ldi r18,lo8(1)
+ 102 005e 30E0      		ldi r19,0
+ 103 0060 B901      		movw r22,r18
+ 104               	.LVL14:
+ 105 0062 00C0      		rjmp 2f
+ 106               		1:
+ 107 0064 660F      		lsl r22
+ 108 0066 771F      		rol r23
+ 109               		2:
+ 110 0068 8A95      		dec r24
+ 111 006a 02F4      		brpl 1b
+ 112 006c CB01      		movw r24,r22
+ 113               	.LVL15:
+ 114 006e 8095      		com r24
+ 115 0070 8423      		and r24,r20
+ 116 0072 00C0      		rjmp .L21
+ 117               	.LVL16:
+ 118               	.L5:
+  33:../code/MCAL/GPIO/gpio.c ****             {
+ 119               		.loc 1 33 0
+ 120 0074 4130      		cpi r20,lo8(1)
+ 121 0076 01F4      		brne .L17
+  35:../code/MCAL/GPIO/gpio.c ****             }
+ 122               		.loc 1 35 0
+ 123 0078 4AB3      		in r20,0x1a
+ 124               	.LVL17:
+ 125 007a 21E0      		ldi r18,lo8(1)
+ 126 007c 30E0      		ldi r19,0
+ 127 007e B901      		movw r22,r18
+ 128               	.LVL18:
+ 129 0080 00C0      		rjmp 2f
+ 130               		1:
+ 131 0082 660F      		lsl r22
+ 132 0084 771F      		rol r23
+ 133               		2:
+ 134 0086 8A95      		dec r24
+ 135 0088 02F4      		brpl 1b
+ 136 008a CB01      		movw r24,r22
+ 137               	.LVL19:
+ 138 008c 842B      		or r24,r20
+ 139               	.L21:
+ 140 008e 8ABB      		out 0x1a,r24
+ 141 0090 00C0      		rjmp .L22
+ 142               	.LVL20:
+ 143               	.L12:
+  26:../code/MCAL/GPIO/gpio.c ****         {
+ 144               		.loc 1 26 0
+ 145 0092 6334      		cpi r22,lo8(67)
+ 146 0094 01F0      		breq .L8
+ 147 0096 6434      		cpi r22,lo8(68)
+ 148 0098 01F0      		breq .L10
+ 149               	.L18:
+  51:../code/MCAL/GPIO/gpio.c ****             }
+  52:../code/MCAL/GPIO/gpio.c ****             else
+  53:../code/MCAL/GPIO/gpio.c ****             {
+  54:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_DIRECTION;
+  55:../code/MCAL/GPIO/gpio.c ****             }
+  56:../code/MCAL/GPIO/gpio.c ****             break;
+  57:../code/MCAL/GPIO/gpio.c **** 
+  58:../code/MCAL/GPIO/gpio.c ****         case PORT_C:
+  59:../code/MCAL/GPIO/gpio.c ****             if (direction == IN)
+  60:../code/MCAL/GPIO/gpio.c ****             {
+  61:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(DDRC, pinNumber);
+  62:../code/MCAL/GPIO/gpio.c ****             }
+  63:../code/MCAL/GPIO/gpio.c ****             else if (direction == OUT)
+  64:../code/MCAL/GPIO/gpio.c ****             {
+  65:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(DDRC, pinNumber);
+  66:../code/MCAL/GPIO/gpio.c ****             }
+  67:../code/MCAL/GPIO/gpio.c ****             else
+  68:../code/MCAL/GPIO/gpio.c ****             {
+  69:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_DIRECTION;
+  70:../code/MCAL/GPIO/gpio.c ****             }
+  71:../code/MCAL/GPIO/gpio.c ****             break;
+  72:../code/MCAL/GPIO/gpio.c **** 
+  73:../code/MCAL/GPIO/gpio.c ****         case PORT_D:
+  74:../code/MCAL/GPIO/gpio.c ****             if (direction == IN)
+  75:../code/MCAL/GPIO/gpio.c ****             {
+  76:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(DDRD, pinNumber);
+  77:../code/MCAL/GPIO/gpio.c ****             }
+  78:../code/MCAL/GPIO/gpio.c ****             else if (direction == OUT)
+  79:../code/MCAL/GPIO/gpio.c ****             {
+  80:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(DDRD, pinNumber);
+  81:../code/MCAL/GPIO/gpio.c ****             }
+  82:../code/MCAL/GPIO/gpio.c ****             else
+  83:../code/MCAL/GPIO/gpio.c ****             {
+  84:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_DIRECTION;
+  85:../code/MCAL/GPIO/gpio.c ****             }
+  86:../code/MCAL/GPIO/gpio.c ****             break;
+  87:../code/MCAL/GPIO/gpio.c **** 
+  88:../code/MCAL/GPIO/gpio.c ****         default:
+  89:../code/MCAL/GPIO/gpio.c ****             ret = WRONG_PORT;
+ 150               		.loc 1 89 0
+ 151 009a 82E0      		ldi r24,lo8(2)
+ 152               	.LVL21:
+  90:../code/MCAL/GPIO/gpio.c ****             break;
+  91:../code/MCAL/GPIO/gpio.c ****         }
+  92:../code/MCAL/GPIO/gpio.c ****     }
+  93:../code/MCAL/GPIO/gpio.c **** 
+  94:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 153               		.loc 1 94 0
+ 154 009c 0895      		ret
+ 155               	.LVL22:
+ 156               	.L8:
+  59:../code/MCAL/GPIO/gpio.c ****             {
+ 157               		.loc 1 59 0
+ 158 009e 4111      		cpse r20,__zero_reg__
+ 159 00a0 00C0      		rjmp .L9
+  61:../code/MCAL/GPIO/gpio.c ****             }
+ 160               		.loc 1 61 0
+ 161 00a2 44B3      		in r20,0x14
+ 162               	.LVL23:
+ 163 00a4 21E0      		ldi r18,lo8(1)
+ 164 00a6 30E0      		ldi r19,0
+ 165 00a8 B901      		movw r22,r18
+ 166               	.LVL24:
+ 167 00aa 00C0      		rjmp 2f
+ 168               		1:
+ 169 00ac 660F      		lsl r22
+ 170 00ae 771F      		rol r23
+ 171               		2:
+ 172 00b0 8A95      		dec r24
+ 173 00b2 02F4      		brpl 1b
+ 174 00b4 CB01      		movw r24,r22
+ 175               	.LVL25:
+ 176 00b6 8095      		com r24
+ 177 00b8 8423      		and r24,r20
+ 178 00ba 00C0      		rjmp .L25
+ 179               	.LVL26:
+ 180               	.L9:
+  63:../code/MCAL/GPIO/gpio.c ****             {
+ 181               		.loc 1 63 0
+ 182 00bc 4130      		cpi r20,lo8(1)
+ 183 00be 01F4      		brne .L17
+  65:../code/MCAL/GPIO/gpio.c ****             }
+ 184               		.loc 1 65 0
+ 185 00c0 44B3      		in r20,0x14
+ 186               	.LVL27:
+ 187 00c2 21E0      		ldi r18,lo8(1)
+ 188 00c4 30E0      		ldi r19,0
+ 189 00c6 B901      		movw r22,r18
+ 190               	.LVL28:
+ 191 00c8 00C0      		rjmp 2f
+ 192               		1:
+ 193 00ca 660F      		lsl r22
+ 194 00cc 771F      		rol r23
+ 195               		2:
+ 196 00ce 8A95      		dec r24
+ 197 00d0 02F4      		brpl 1b
+ 198 00d2 CB01      		movw r24,r22
+ 199               	.LVL29:
+ 200 00d4 842B      		or r24,r20
+ 201               	.L25:
+ 202 00d6 84BB      		out 0x14,r24
+ 203 00d8 00C0      		rjmp .L22
+ 204               	.LVL30:
+ 205               	.L10:
+  74:../code/MCAL/GPIO/gpio.c ****             {
+ 206               		.loc 1 74 0
+ 207 00da 4111      		cpse r20,__zero_reg__
+ 208 00dc 00C0      		rjmp .L11
+  76:../code/MCAL/GPIO/gpio.c ****             }
+ 209               		.loc 1 76 0
+ 210 00de 41B3      		in r20,0x11
+ 211               	.LVL31:
+ 212 00e0 21E0      		ldi r18,lo8(1)
+ 213 00e2 30E0      		ldi r19,0
+ 214 00e4 B901      		movw r22,r18
+ 215               	.LVL32:
+ 216 00e6 00C0      		rjmp 2f
+ 217               		1:
+ 218 00e8 660F      		lsl r22
+ 219 00ea 771F      		rol r23
+ 220               		2:
+ 221 00ec 8A95      		dec r24
+ 222 00ee 02F4      		brpl 1b
+ 223 00f0 CB01      		movw r24,r22
+ 224               	.LVL33:
+ 225 00f2 8095      		com r24
+ 226 00f4 8423      		and r24,r20
+ 227 00f6 00C0      		rjmp .L23
+ 228               	.LVL34:
+ 229               	.L11:
+  78:../code/MCAL/GPIO/gpio.c ****             {
+ 230               		.loc 1 78 0
+ 231 00f8 4130      		cpi r20,lo8(1)
+ 232 00fa 01F0      		breq .+2
+ 233 00fc 00C0      		rjmp .L17
+  80:../code/MCAL/GPIO/gpio.c ****             }
+ 234               		.loc 1 80 0
+ 235 00fe 41B3      		in r20,0x11
+ 236               	.LVL35:
+ 237 0100 21E0      		ldi r18,lo8(1)
+ 238 0102 30E0      		ldi r19,0
+ 239 0104 B901      		movw r22,r18
+ 240               	.LVL36:
+ 241 0106 00C0      		rjmp 2f
+ 242               		1:
+ 243 0108 660F      		lsl r22
+ 244 010a 771F      		rol r23
+ 245               		2:
+ 246 010c 8A95      		dec r24
+ 247 010e 02F4      		brpl 1b
+ 248 0110 CB01      		movw r24,r22
+ 249               	.LVL37:
+ 250 0112 842B      		or r24,r20
+ 251               	.L23:
+ 252 0114 81BB      		out 0x11,r24
+ 253 0116 00C0      		rjmp .L22
+ 254               		.cfi_endproc
+ 255               	.LFE0:
+ 257               	.global	GPIO_writePin
+ 259               	GPIO_writePin:
+ 260               	.LFB1:
+  95:../code/MCAL/GPIO/gpio.c **** }
+  96:../code/MCAL/GPIO/gpio.c **** 
+  97:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_writePin(EN_pin_t pinNumber, EN_port_t portNumber, EN_value_t value)
+  98:../code/MCAL/GPIO/gpio.c **** {
+ 261               		.loc 1 98 0
+ 262               		.cfi_startproc
+ 263               	.LVL38:
+ 264               	/* prologue: function */
+ 265               	/* frame size = 0 */
+ 266               	/* stack size = 0 */
+ 267               	.L__stack_usage = 0
+  99:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 100:../code/MCAL/GPIO/gpio.c ****      * 1-check if the pin is available
+ 101:../code/MCAL/GPIO/gpio.c ****      * 2-switch over the portNumber
+ 102:../code/MCAL/GPIO/gpio.c ****      *     2.1-in each case check the value
+ 103:../code/MCAL/GPIO/gpio.c ****      *         2.1.1-if the value LOW, CLR the corresponding bit in PORTx
+ 104:../code/MCAL/GPIO/gpio.c ****      *         2.1.2-if the value HIGH, SET the corresponding bit in PORTx
+ 105:../code/MCAL/GPIO/gpio.c ****      *         2.1.3-if not HIGH or LOW, then WRONG_VALUE
+ 106:../code/MCAL/GPIO/gpio.c ****      *     2.2-if not A, B, C, or D, then WRONG_PORT
+ 107:../code/MCAL/GPIO/gpio.c ****      * 3-return the result
+ 108:../code/MCAL/GPIO/gpio.c ****      */
+ 109:../code/MCAL/GPIO/gpio.c **** 
+ 110:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 111:../code/MCAL/GPIO/gpio.c ****     if ((pinNumber < PIN_0) || (pinNumber > PIN_7))
+ 268               		.loc 1 111 0
+ 269 0118 8830      		cpi r24,lo8(8)
+ 270 011a 00F0      		brlo .L54
+ 271 011c 81E0      		ldi r24,lo8(1)
+ 272               	.LVL39:
+ 273 011e 0895      		ret
+ 274               	.LVL40:
+ 275               	.L54:
+ 112:../code/MCAL/GPIO/gpio.c ****     {
+ 113:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PIN;
+ 114:../code/MCAL/GPIO/gpio.c ****     }
+ 115:../code/MCAL/GPIO/gpio.c **** 
+ 116:../code/MCAL/GPIO/gpio.c ****     if (ret == GPIO_OK)
+ 117:../code/MCAL/GPIO/gpio.c ****     {
+ 118:../code/MCAL/GPIO/gpio.c ****         switch (portNumber)
+ 276               		.loc 1 118 0
+ 277 0120 6234      		cpi r22,lo8(66)
+ 278 0122 01F4      		brne .L55
+ 119:../code/MCAL/GPIO/gpio.c ****         {
+ 120:../code/MCAL/GPIO/gpio.c ****         case PORT_A:
+ 121:../code/MCAL/GPIO/gpio.c ****             if (value == LOW)
+ 122:../code/MCAL/GPIO/gpio.c ****             {
+ 123:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(PORTA, pinNumber);
+ 124:../code/MCAL/GPIO/gpio.c ****             }
+ 125:../code/MCAL/GPIO/gpio.c ****             else if (value == HIGH)
+ 126:../code/MCAL/GPIO/gpio.c ****             {
+ 127:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(PORTA, pinNumber);
+ 128:../code/MCAL/GPIO/gpio.c ****             }
+ 129:../code/MCAL/GPIO/gpio.c ****             else
+ 130:../code/MCAL/GPIO/gpio.c ****             {
+ 131:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_VALUE;
+ 132:../code/MCAL/GPIO/gpio.c ****             }
+ 133:../code/MCAL/GPIO/gpio.c ****             break;
+ 134:../code/MCAL/GPIO/gpio.c **** 
+ 135:../code/MCAL/GPIO/gpio.c ****         case PORT_B:
+ 136:../code/MCAL/GPIO/gpio.c ****             if (value == LOW)
+ 279               		.loc 1 136 0
+ 280 0124 4111      		cpse r20,__zero_reg__
+ 281 0126 00C0      		rjmp .L35
+ 137:../code/MCAL/GPIO/gpio.c ****             {
+ 138:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(PORTB, pinNumber);
+ 282               		.loc 1 138 0
+ 283 0128 48B3      		in r20,0x18
+ 284               	.LVL41:
+ 285 012a 21E0      		ldi r18,lo8(1)
+ 286 012c 30E0      		ldi r19,0
+ 287 012e B901      		movw r22,r18
+ 288               	.LVL42:
+ 289 0130 00C0      		rjmp 2f
+ 290               		1:
+ 291 0132 660F      		lsl r22
+ 292 0134 771F      		rol r23
+ 293               		2:
+ 294 0136 8A95      		dec r24
+ 295 0138 02F4      		brpl 1b
+ 296 013a CB01      		movw r24,r22
+ 297               	.LVL43:
+ 298 013c 8095      		com r24
+ 299 013e 8423      		and r24,r20
+ 300 0140 00C0      		rjmp .L52
+ 301               	.LVL44:
+ 302               	.L35:
+ 139:../code/MCAL/GPIO/gpio.c ****             }
+ 140:../code/MCAL/GPIO/gpio.c ****             else if (value == HIGH)
+ 303               		.loc 1 140 0
+ 304 0142 4130      		cpi r20,lo8(1)
+ 305 0144 01F4      		brne .L45
+ 141:../code/MCAL/GPIO/gpio.c ****             {
+ 142:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(PORTB, pinNumber);
+ 306               		.loc 1 142 0
+ 307 0146 48B3      		in r20,0x18
+ 308               	.LVL45:
+ 309 0148 21E0      		ldi r18,lo8(1)
+ 310 014a 30E0      		ldi r19,0
+ 311 014c B901      		movw r22,r18
+ 312               	.LVL46:
+ 313 014e 00C0      		rjmp 2f
+ 314               		1:
+ 315 0150 660F      		lsl r22
+ 316 0152 771F      		rol r23
+ 317               		2:
+ 318 0154 8A95      		dec r24
+ 319 0156 02F4      		brpl 1b
+ 320 0158 CB01      		movw r24,r22
+ 321               	.LVL47:
+ 322 015a 842B      		or r24,r20
+ 323               	.L52:
+ 324 015c 88BB      		out 0x18,r24
+ 325               	.L50:
+ 326 015e 80E0      		ldi r24,0
+ 327 0160 0895      		ret
+ 328               	.LVL48:
+ 329               	.L45:
+ 131:../code/MCAL/GPIO/gpio.c ****             }
+ 330               		.loc 1 131 0
+ 331 0162 84E0      		ldi r24,lo8(4)
+ 332               	.LVL49:
+ 333 0164 0895      		ret
+ 334               	.LVL50:
+ 335               	.L55:
+ 118:../code/MCAL/GPIO/gpio.c ****         {
+ 336               		.loc 1 118 0
+ 337 0166 6334      		cpi r22,lo8(67)
+ 338 0168 00F4      		brsh .L40
+ 339 016a 6134      		cpi r22,lo8(65)
+ 340 016c 01F4      		brne .L46
+ 121:../code/MCAL/GPIO/gpio.c ****             {
+ 341               		.loc 1 121 0
+ 342 016e 4111      		cpse r20,__zero_reg__
+ 343 0170 00C0      		rjmp .L33
+ 123:../code/MCAL/GPIO/gpio.c ****             }
+ 344               		.loc 1 123 0
+ 345 0172 4BB3      		in r20,0x1b
+ 346               	.LVL51:
+ 347 0174 21E0      		ldi r18,lo8(1)
+ 348 0176 30E0      		ldi r19,0
+ 349 0178 B901      		movw r22,r18
+ 350               	.LVL52:
+ 351 017a 00C0      		rjmp 2f
+ 352               		1:
+ 353 017c 660F      		lsl r22
+ 354 017e 771F      		rol r23
+ 355               		2:
+ 356 0180 8A95      		dec r24
+ 357 0182 02F4      		brpl 1b
+ 358 0184 CB01      		movw r24,r22
+ 359               	.LVL53:
+ 360 0186 8095      		com r24
+ 361 0188 8423      		and r24,r20
+ 362 018a 00C0      		rjmp .L49
+ 363               	.LVL54:
+ 364               	.L33:
+ 125:../code/MCAL/GPIO/gpio.c ****             {
+ 365               		.loc 1 125 0
+ 366 018c 4130      		cpi r20,lo8(1)
+ 367 018e 01F4      		brne .L45
+ 127:../code/MCAL/GPIO/gpio.c ****             }
+ 368               		.loc 1 127 0
+ 369 0190 4BB3      		in r20,0x1b
+ 370               	.LVL55:
+ 371 0192 21E0      		ldi r18,lo8(1)
+ 372 0194 30E0      		ldi r19,0
+ 373 0196 B901      		movw r22,r18
+ 374               	.LVL56:
+ 375 0198 00C0      		rjmp 2f
+ 376               		1:
+ 377 019a 660F      		lsl r22
+ 378 019c 771F      		rol r23
+ 379               		2:
+ 380 019e 8A95      		dec r24
+ 381 01a0 02F4      		brpl 1b
+ 382 01a2 CB01      		movw r24,r22
+ 383               	.LVL57:
+ 384 01a4 842B      		or r24,r20
+ 385               	.L49:
+ 386 01a6 8BBB      		out 0x1b,r24
+ 387 01a8 00C0      		rjmp .L50
+ 388               	.LVL58:
+ 389               	.L40:
+ 118:../code/MCAL/GPIO/gpio.c ****         {
+ 390               		.loc 1 118 0
+ 391 01aa 6334      		cpi r22,lo8(67)
+ 392 01ac 01F0      		breq .L36
+ 393 01ae 6434      		cpi r22,lo8(68)
+ 394 01b0 01F0      		breq .L38
+ 395               	.L46:
+ 143:../code/MCAL/GPIO/gpio.c ****             }
+ 144:../code/MCAL/GPIO/gpio.c ****             else
+ 145:../code/MCAL/GPIO/gpio.c ****             {
+ 146:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_VALUE;
+ 147:../code/MCAL/GPIO/gpio.c ****             }
+ 148:../code/MCAL/GPIO/gpio.c ****             break;
+ 149:../code/MCAL/GPIO/gpio.c **** 
+ 150:../code/MCAL/GPIO/gpio.c ****         case PORT_C:
+ 151:../code/MCAL/GPIO/gpio.c ****             if (value == LOW)
+ 152:../code/MCAL/GPIO/gpio.c ****             {
+ 153:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(PORTC, pinNumber);
+ 154:../code/MCAL/GPIO/gpio.c ****             }
+ 155:../code/MCAL/GPIO/gpio.c ****             else if (value == HIGH)
+ 156:../code/MCAL/GPIO/gpio.c ****             {
+ 157:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(PORTC, pinNumber);
+ 158:../code/MCAL/GPIO/gpio.c ****             }
+ 159:../code/MCAL/GPIO/gpio.c ****             else
+ 160:../code/MCAL/GPIO/gpio.c ****             {
+ 161:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_VALUE;
+ 162:../code/MCAL/GPIO/gpio.c ****             }
+ 163:../code/MCAL/GPIO/gpio.c ****             break;
+ 164:../code/MCAL/GPIO/gpio.c **** 
+ 165:../code/MCAL/GPIO/gpio.c ****         case PORT_D:
+ 166:../code/MCAL/GPIO/gpio.c ****             if (value == LOW)
+ 167:../code/MCAL/GPIO/gpio.c ****             {
+ 168:../code/MCAL/GPIO/gpio.c ****                 CLR_BIT(PORTD, pinNumber);
+ 169:../code/MCAL/GPIO/gpio.c ****             }
+ 170:../code/MCAL/GPIO/gpio.c ****             else if (value == HIGH)
+ 171:../code/MCAL/GPIO/gpio.c ****             {
+ 172:../code/MCAL/GPIO/gpio.c ****                 SET_BIT(PORTD, pinNumber);
+ 173:../code/MCAL/GPIO/gpio.c ****             }
+ 174:../code/MCAL/GPIO/gpio.c ****             else
+ 175:../code/MCAL/GPIO/gpio.c ****             {
+ 176:../code/MCAL/GPIO/gpio.c ****                 ret = WRONG_VALUE;
+ 177:../code/MCAL/GPIO/gpio.c ****             }
+ 178:../code/MCAL/GPIO/gpio.c ****             break;
+ 179:../code/MCAL/GPIO/gpio.c **** 
+ 180:../code/MCAL/GPIO/gpio.c ****         default:
+ 181:../code/MCAL/GPIO/gpio.c ****             ret = WRONG_PORT;
+ 396               		.loc 1 181 0
+ 397 01b2 82E0      		ldi r24,lo8(2)
+ 398               	.LVL59:
+ 182:../code/MCAL/GPIO/gpio.c ****             break;
+ 183:../code/MCAL/GPIO/gpio.c ****         }
+ 184:../code/MCAL/GPIO/gpio.c ****     }
+ 185:../code/MCAL/GPIO/gpio.c **** 
+ 186:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 399               		.loc 1 186 0
+ 400 01b4 0895      		ret
+ 401               	.LVL60:
+ 402               	.L36:
+ 151:../code/MCAL/GPIO/gpio.c ****             {
+ 403               		.loc 1 151 0
+ 404 01b6 4111      		cpse r20,__zero_reg__
+ 405 01b8 00C0      		rjmp .L37
+ 153:../code/MCAL/GPIO/gpio.c ****             }
+ 406               		.loc 1 153 0
+ 407 01ba 45B3      		in r20,0x15
+ 408               	.LVL61:
+ 409 01bc 21E0      		ldi r18,lo8(1)
+ 410 01be 30E0      		ldi r19,0
+ 411 01c0 B901      		movw r22,r18
+ 412               	.LVL62:
+ 413 01c2 00C0      		rjmp 2f
+ 414               		1:
+ 415 01c4 660F      		lsl r22
+ 416 01c6 771F      		rol r23
+ 417               		2:
+ 418 01c8 8A95      		dec r24
+ 419 01ca 02F4      		brpl 1b
+ 420 01cc CB01      		movw r24,r22
+ 421               	.LVL63:
+ 422 01ce 8095      		com r24
+ 423 01d0 8423      		and r24,r20
+ 424 01d2 00C0      		rjmp .L53
+ 425               	.LVL64:
+ 426               	.L37:
+ 155:../code/MCAL/GPIO/gpio.c ****             {
+ 427               		.loc 1 155 0
+ 428 01d4 4130      		cpi r20,lo8(1)
+ 429 01d6 01F4      		brne .L45
+ 157:../code/MCAL/GPIO/gpio.c ****             }
+ 430               		.loc 1 157 0
+ 431 01d8 45B3      		in r20,0x15
+ 432               	.LVL65:
+ 433 01da 21E0      		ldi r18,lo8(1)
+ 434 01dc 30E0      		ldi r19,0
+ 435 01de B901      		movw r22,r18
+ 436               	.LVL66:
+ 437 01e0 00C0      		rjmp 2f
+ 438               		1:
+ 439 01e2 660F      		lsl r22
+ 440 01e4 771F      		rol r23
+ 441               		2:
+ 442 01e6 8A95      		dec r24
+ 443 01e8 02F4      		brpl 1b
+ 444 01ea CB01      		movw r24,r22
+ 445               	.LVL67:
+ 446 01ec 842B      		or r24,r20
+ 447               	.L53:
+ 448 01ee 85BB      		out 0x15,r24
+ 449 01f0 00C0      		rjmp .L50
+ 450               	.LVL68:
+ 451               	.L38:
+ 166:../code/MCAL/GPIO/gpio.c ****             {
+ 452               		.loc 1 166 0
+ 453 01f2 4111      		cpse r20,__zero_reg__
+ 454 01f4 00C0      		rjmp .L39
+ 168:../code/MCAL/GPIO/gpio.c ****             }
+ 455               		.loc 1 168 0
+ 456 01f6 42B3      		in r20,0x12
+ 457               	.LVL69:
+ 458 01f8 21E0      		ldi r18,lo8(1)
+ 459 01fa 30E0      		ldi r19,0
+ 460 01fc B901      		movw r22,r18
+ 461               	.LVL70:
+ 462 01fe 00C0      		rjmp 2f
+ 463               		1:
+ 464 0200 660F      		lsl r22
+ 465 0202 771F      		rol r23
+ 466               		2:
+ 467 0204 8A95      		dec r24
+ 468 0206 02F4      		brpl 1b
+ 469 0208 CB01      		movw r24,r22
+ 470               	.LVL71:
+ 471 020a 8095      		com r24
+ 472 020c 8423      		and r24,r20
+ 473 020e 00C0      		rjmp .L51
+ 474               	.LVL72:
+ 475               	.L39:
+ 170:../code/MCAL/GPIO/gpio.c ****             {
+ 476               		.loc 1 170 0
+ 477 0210 4130      		cpi r20,lo8(1)
+ 478 0212 01F0      		breq .+2
+ 479 0214 00C0      		rjmp .L45
+ 172:../code/MCAL/GPIO/gpio.c ****             }
+ 480               		.loc 1 172 0
+ 481 0216 42B3      		in r20,0x12
+ 482               	.LVL73:
+ 483 0218 21E0      		ldi r18,lo8(1)
+ 484 021a 30E0      		ldi r19,0
+ 485 021c B901      		movw r22,r18
+ 486               	.LVL74:
+ 487 021e 00C0      		rjmp 2f
+ 488               		1:
+ 489 0220 660F      		lsl r22
+ 490 0222 771F      		rol r23
+ 491               		2:
+ 492 0224 8A95      		dec r24
+ 493 0226 02F4      		brpl 1b
+ 494 0228 CB01      		movw r24,r22
+ 495               	.LVL75:
+ 496 022a 842B      		or r24,r20
+ 497               	.L51:
+ 498 022c 82BB      		out 0x12,r24
+ 499 022e 00C0      		rjmp .L50
+ 500               		.cfi_endproc
+ 501               	.LFE1:
+ 503               	.global	GPIO_readPin
+ 505               	GPIO_readPin:
+ 506               	.LFB2:
+ 187:../code/MCAL/GPIO/gpio.c **** }
+ 188:../code/MCAL/GPIO/gpio.c **** 
+ 189:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_readPin(EN_pin_t pinNumber, EN_port_t portNumber, EN_value_t *value)
+ 190:../code/MCAL/GPIO/gpio.c **** {
+ 507               		.loc 1 190 0
+ 508               		.cfi_startproc
+ 509               	.LVL76:
+ 510               	/* prologue: function */
+ 511               	/* frame size = 0 */
+ 512               	/* stack size = 0 */
+ 513               	.L__stack_usage = 0
+ 514 0230 FA01      		movw r30,r20
+ 515               	.LVL77:
+ 191:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 192:../code/MCAL/GPIO/gpio.c ****      * 1-check if the pin is available
+ 193:../code/MCAL/GPIO/gpio.c ****      * 2-switch over the portNumber
+ 194:../code/MCAL/GPIO/gpio.c ****      *    2.1-in each case fill the value buffer with the content of PINx register
+ 195:../code/MCAL/GPIO/gpio.c ****      *    2.2-if not A, B, C, or D, then WRONG_PORT
+ 196:../code/MCAL/GPIO/gpio.c ****      * 3-return the result
+ 197:../code/MCAL/GPIO/gpio.c ****      */
+ 198:../code/MCAL/GPIO/gpio.c **** 
+ 199:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 200:../code/MCAL/GPIO/gpio.c ****     if ((pinNumber < PIN_0) || (pinNumber > PIN_7))
+ 516               		.loc 1 200 0
+ 517 0232 8830      		cpi r24,lo8(8)
+ 518 0234 00F0      		brlo .L69
+ 519 0236 81E0      		ldi r24,lo8(1)
+ 520               	.LVL78:
+ 521 0238 0895      		ret
+ 522               	.LVL79:
+ 523               	.L69:
+ 201:../code/MCAL/GPIO/gpio.c ****     {
+ 202:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PIN;
+ 203:../code/MCAL/GPIO/gpio.c ****     }
+ 204:../code/MCAL/GPIO/gpio.c **** 
+ 205:../code/MCAL/GPIO/gpio.c ****     if (ret == GPIO_OK)
+ 206:../code/MCAL/GPIO/gpio.c ****     {
+ 207:../code/MCAL/GPIO/gpio.c ****         switch (portNumber)
+ 524               		.loc 1 207 0
+ 525 023a 6234      		cpi r22,lo8(66)
+ 526 023c 01F4      		brne .L70
+ 208:../code/MCAL/GPIO/gpio.c ****         {
+ 209:../code/MCAL/GPIO/gpio.c ****         case PORT_A:
+ 210:../code/MCAL/GPIO/gpio.c ****             *value = GET_BIT(PINA, pinNumber);
+ 211:../code/MCAL/GPIO/gpio.c ****             break;
+ 212:../code/MCAL/GPIO/gpio.c **** 
+ 213:../code/MCAL/GPIO/gpio.c ****         case PORT_B:
+ 214:../code/MCAL/GPIO/gpio.c ****             *value = GET_BIT(PINB, pinNumber);
+ 527               		.loc 1 214 0
+ 528 023e 26B3      		in r18,0x16
+ 529 0240 00C0      		rjmp .L68
+ 530               	.L70:
+ 207:../code/MCAL/GPIO/gpio.c ****         {
+ 531               		.loc 1 207 0
+ 532 0242 6334      		cpi r22,lo8(67)
+ 533 0244 00F4      		brsh .L63
+ 534 0246 6134      		cpi r22,lo8(65)
+ 535 0248 01F4      		brne .L65
+ 210:../code/MCAL/GPIO/gpio.c ****             break;
+ 536               		.loc 1 210 0
+ 537 024a 29B3      		in r18,0x19
+ 538               	.L68:
+ 215:../code/MCAL/GPIO/gpio.c ****             break;
+ 216:../code/MCAL/GPIO/gpio.c **** 
+ 217:../code/MCAL/GPIO/gpio.c ****         case PORT_C:
+ 218:../code/MCAL/GPIO/gpio.c ****             *value = GET_BIT(PINC, pinNumber);
+ 219:../code/MCAL/GPIO/gpio.c ****             break;
+ 220:../code/MCAL/GPIO/gpio.c **** 
+ 221:../code/MCAL/GPIO/gpio.c ****         case PORT_D:
+ 222:../code/MCAL/GPIO/gpio.c ****             *value = GET_BIT(PIND, pinNumber);
+ 539               		.loc 1 222 0
+ 540 024c 30E0      		ldi r19,0
+ 541 024e A901      		movw r20,r18
+ 542               	.LVL80:
+ 543 0250 00C0      		rjmp 2f
+ 544               		1:
+ 545 0252 5595      		asr r21
+ 546 0254 4795      		ror r20
+ 547               		2:
+ 548 0256 8A95      		dec r24
+ 549 0258 02F4      		brpl 1b
+ 550 025a CA01      		movw r24,r20
+ 551               	.LVL81:
+ 552 025c 8170      		andi r24,lo8(1)
+ 553 025e 8083      		st Z,r24
+ 223:../code/MCAL/GPIO/gpio.c ****             break;
+ 554               		.loc 1 223 0
+ 555 0260 80E0      		ldi r24,0
+ 556 0262 0895      		ret
+ 557               	.LVL82:
+ 558               	.L65:
+ 224:../code/MCAL/GPIO/gpio.c **** 
+ 225:../code/MCAL/GPIO/gpio.c ****         default:
+ 226:../code/MCAL/GPIO/gpio.c ****             ret = WRONG_PORT;
+ 559               		.loc 1 226 0
+ 560 0264 82E0      		ldi r24,lo8(2)
+ 561               	.LVL83:
+ 227:../code/MCAL/GPIO/gpio.c ****             break;
+ 228:../code/MCAL/GPIO/gpio.c ****         }
+ 229:../code/MCAL/GPIO/gpio.c ****     }
+ 230:../code/MCAL/GPIO/gpio.c **** 
+ 231:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 562               		.loc 1 231 0
+ 563 0266 0895      		ret
+ 564               	.LVL84:
+ 565               	.L63:
+ 207:../code/MCAL/GPIO/gpio.c ****         {
+ 566               		.loc 1 207 0
+ 567 0268 6334      		cpi r22,lo8(67)
+ 568 026a 01F4      		brne .L71
+ 218:../code/MCAL/GPIO/gpio.c ****             break;
+ 569               		.loc 1 218 0
+ 570 026c 23B3      		in r18,0x13
+ 571 026e 00C0      		rjmp .L68
+ 572               	.L71:
+ 207:../code/MCAL/GPIO/gpio.c ****         {
+ 573               		.loc 1 207 0
+ 574 0270 6434      		cpi r22,lo8(68)
+ 575 0272 01F4      		brne .L65
+ 222:../code/MCAL/GPIO/gpio.c ****             break;
+ 576               		.loc 1 222 0
+ 577 0274 20B3      		in r18,0x10
+ 578 0276 00C0      		rjmp .L68
+ 579               		.cfi_endproc
+ 580               	.LFE2:
+ 582               	.global	GPIO_togglePin
+ 584               	GPIO_togglePin:
+ 585               	.LFB3:
+ 232:../code/MCAL/GPIO/gpio.c **** }
+ 233:../code/MCAL/GPIO/gpio.c **** 
+ 234:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_togglePin(EN_pin_t pinNumber, EN_port_t portNumber)
+ 235:../code/MCAL/GPIO/gpio.c **** {
+ 586               		.loc 1 235 0
+ 587               		.cfi_startproc
+ 588               	.LVL85:
+ 589               	/* prologue: function */
+ 590               	/* frame size = 0 */
+ 591               	/* stack size = 0 */
+ 592               	.L__stack_usage = 0
+ 236:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 237:../code/MCAL/GPIO/gpio.c ****      * 1-check if the pin is available
+ 238:../code/MCAL/GPIO/gpio.c ****      * 2-switch over the portNumber
+ 239:../code/MCAL/GPIO/gpio.c ****      *     2.1-in each case toggle the corresponding bit in PORTx register
+ 240:../code/MCAL/GPIO/gpio.c ****      *     2.2-if not A, B, C, or D, then WRONG_PORT
+ 241:../code/MCAL/GPIO/gpio.c ****      * 3-return the result
+ 242:../code/MCAL/GPIO/gpio.c ****      */
+ 243:../code/MCAL/GPIO/gpio.c **** 
+ 244:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 245:../code/MCAL/GPIO/gpio.c ****     if ((pinNumber < PIN_0) || (pinNumber > PIN_7))
+ 593               		.loc 1 245 0
+ 594 0278 8830      		cpi r24,lo8(8)
+ 595 027a 00F0      		brlo .L85
+ 596 027c 81E0      		ldi r24,lo8(1)
+ 597               	.LVL86:
+ 598 027e 0895      		ret
+ 599               	.LVL87:
+ 600               	.L85:
+ 246:../code/MCAL/GPIO/gpio.c ****     {
+ 247:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PIN;
+ 248:../code/MCAL/GPIO/gpio.c ****     }
+ 249:../code/MCAL/GPIO/gpio.c **** 
+ 250:../code/MCAL/GPIO/gpio.c ****     if (ret == GPIO_OK)
+ 251:../code/MCAL/GPIO/gpio.c ****     {
+ 252:../code/MCAL/GPIO/gpio.c ****         switch (portNumber)
+ 601               		.loc 1 252 0
+ 602 0280 6234      		cpi r22,lo8(66)
+ 603 0282 01F4      		brne .L86
+ 253:../code/MCAL/GPIO/gpio.c ****         {
+ 254:../code/MCAL/GPIO/gpio.c ****         case PORT_A:
+ 255:../code/MCAL/GPIO/gpio.c ****             TGL_BIT(PORTA, pinNumber);
+ 256:../code/MCAL/GPIO/gpio.c ****             break;
+ 257:../code/MCAL/GPIO/gpio.c **** 
+ 258:../code/MCAL/GPIO/gpio.c ****         case PORT_B:
+ 259:../code/MCAL/GPIO/gpio.c ****             TGL_BIT(PORTB, pinNumber);
+ 604               		.loc 1 259 0
+ 605 0284 48B3      		in r20,0x18
+ 606 0286 21E0      		ldi r18,lo8(1)
+ 607 0288 30E0      		ldi r19,0
+ 608 028a B901      		movw r22,r18
+ 609               	.LVL88:
+ 610 028c 00C0      		rjmp 2f
+ 611               		1:
+ 612 028e 660F      		lsl r22
+ 613 0290 771F      		rol r23
+ 614               		2:
+ 615 0292 8A95      		dec r24
+ 616 0294 02F4      		brpl 1b
+ 617 0296 CB01      		movw r24,r22
+ 618               	.LVL89:
+ 619 0298 8427      		eor r24,r20
+ 620 029a 88BB      		out 0x18,r24
+ 621 029c 00C0      		rjmp .L84
+ 622               	.LVL90:
+ 623               	.L86:
+ 252:../code/MCAL/GPIO/gpio.c ****         {
+ 624               		.loc 1 252 0
+ 625 029e 6334      		cpi r22,lo8(67)
+ 626 02a0 00F4      		brsh .L79
+ 627 02a2 6134      		cpi r22,lo8(65)
+ 628 02a4 01F4      		brne .L81
+ 255:../code/MCAL/GPIO/gpio.c ****             break;
+ 629               		.loc 1 255 0
+ 630 02a6 4BB3      		in r20,0x1b
+ 631 02a8 21E0      		ldi r18,lo8(1)
+ 632 02aa 30E0      		ldi r19,0
+ 633 02ac B901      		movw r22,r18
+ 634               	.LVL91:
+ 635 02ae 00C0      		rjmp 2f
+ 636               		1:
+ 637 02b0 660F      		lsl r22
+ 638 02b2 771F      		rol r23
+ 639               		2:
+ 640 02b4 8A95      		dec r24
+ 641 02b6 02F4      		brpl 1b
+ 642 02b8 CB01      		movw r24,r22
+ 643               	.LVL92:
+ 644 02ba 8427      		eor r24,r20
+ 645 02bc 8BBB      		out 0x1b,r24
+ 646               	.L84:
+ 260:../code/MCAL/GPIO/gpio.c ****             break;
+ 261:../code/MCAL/GPIO/gpio.c **** 
+ 262:../code/MCAL/GPIO/gpio.c ****         case PORT_C:
+ 263:../code/MCAL/GPIO/gpio.c ****             TGL_BIT(PORTC, pinNumber);
+ 264:../code/MCAL/GPIO/gpio.c ****             break;
+ 265:../code/MCAL/GPIO/gpio.c **** 
+ 266:../code/MCAL/GPIO/gpio.c ****         case PORT_D:
+ 267:../code/MCAL/GPIO/gpio.c ****             TGL_BIT(PORTD, pinNumber);
+ 268:../code/MCAL/GPIO/gpio.c ****             break;
+ 647               		.loc 1 268 0
+ 648 02be 80E0      		ldi r24,0
+ 649 02c0 0895      		ret
+ 650               	.LVL93:
+ 651               	.L81:
+ 269:../code/MCAL/GPIO/gpio.c **** 
+ 270:../code/MCAL/GPIO/gpio.c ****         default:
+ 271:../code/MCAL/GPIO/gpio.c ****             ret = WRONG_PORT;
+ 652               		.loc 1 271 0
+ 653 02c2 82E0      		ldi r24,lo8(2)
+ 654               	.LVL94:
+ 272:../code/MCAL/GPIO/gpio.c ****             break;
+ 273:../code/MCAL/GPIO/gpio.c ****         }
+ 274:../code/MCAL/GPIO/gpio.c ****     }
+ 275:../code/MCAL/GPIO/gpio.c **** 
+ 276:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 655               		.loc 1 276 0
+ 656 02c4 0895      		ret
+ 657               	.LVL95:
+ 658               	.L79:
+ 252:../code/MCAL/GPIO/gpio.c ****         {
+ 659               		.loc 1 252 0
+ 660 02c6 6334      		cpi r22,lo8(67)
+ 661 02c8 01F4      		brne .L87
+ 263:../code/MCAL/GPIO/gpio.c ****             break;
+ 662               		.loc 1 263 0
+ 663 02ca 45B3      		in r20,0x15
+ 664 02cc 21E0      		ldi r18,lo8(1)
+ 665 02ce 30E0      		ldi r19,0
+ 666 02d0 B901      		movw r22,r18
+ 667               	.LVL96:
+ 668 02d2 00C0      		rjmp 2f
+ 669               		1:
+ 670 02d4 660F      		lsl r22
+ 671 02d6 771F      		rol r23
+ 672               		2:
+ 673 02d8 8A95      		dec r24
+ 674 02da 02F4      		brpl 1b
+ 675 02dc CB01      		movw r24,r22
+ 676               	.LVL97:
+ 677 02de 8427      		eor r24,r20
+ 678 02e0 85BB      		out 0x15,r24
+ 679 02e2 00C0      		rjmp .L84
+ 680               	.LVL98:
+ 681               	.L87:
+ 252:../code/MCAL/GPIO/gpio.c ****         {
+ 682               		.loc 1 252 0
+ 683 02e4 6434      		cpi r22,lo8(68)
+ 684 02e6 01F4      		brne .L81
+ 267:../code/MCAL/GPIO/gpio.c ****             break;
+ 685               		.loc 1 267 0
+ 686 02e8 42B3      		in r20,0x12
+ 687 02ea 21E0      		ldi r18,lo8(1)
+ 688 02ec 30E0      		ldi r19,0
+ 689 02ee B901      		movw r22,r18
+ 690               	.LVL99:
+ 691 02f0 00C0      		rjmp 2f
+ 692               		1:
+ 693 02f2 660F      		lsl r22
+ 694 02f4 771F      		rol r23
+ 695               		2:
+ 696 02f6 8A95      		dec r24
+ 697 02f8 02F4      		brpl 1b
+ 698 02fa CB01      		movw r24,r22
+ 699               	.LVL100:
+ 700 02fc 8427      		eor r24,r20
+ 701 02fe 82BB      		out 0x12,r24
+ 702 0300 00C0      		rjmp .L84
+ 703               		.cfi_endproc
+ 704               	.LFE3:
+ 706               	.global	GPIO_initPort
+ 708               	GPIO_initPort:
+ 709               	.LFB4:
+ 277:../code/MCAL/GPIO/gpio.c **** }
+ 278:../code/MCAL/GPIO/gpio.c **** 
+ 279:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_initPort(EN_port_t portNumber, uint8_t direction)
+ 280:../code/MCAL/GPIO/gpio.c **** {
+ 710               		.loc 1 280 0
+ 711               		.cfi_startproc
+ 712               	.LVL101:
+ 713               	/* prologue: function */
+ 714               	/* frame size = 0 */
+ 715               	/* stack size = 0 */
+ 716               	.L__stack_usage = 0
+ 281:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 282:../code/MCAL/GPIO/gpio.c ****      * 1-switch over the portNumber
+ 283:../code/MCAL/GPIO/gpio.c ****      *     1.1-in each case SET DDRx register to the direction
+ 284:../code/MCAL/GPIO/gpio.c ****      *     1.2-if not A, B, C, or D, then WRONG_PORT
+ 285:../code/MCAL/GPIO/gpio.c ****      * 2-return the result
+ 286:../code/MCAL/GPIO/gpio.c ****      */
+ 287:../code/MCAL/GPIO/gpio.c ****     
+ 288:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 289:../code/MCAL/GPIO/gpio.c **** 
+ 290:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 717               		.loc 1 290 0
+ 718 0302 8234      		cpi r24,lo8(66)
+ 719 0304 01F0      		breq .L90
+ 720 0306 00F4      		brsh .L91
+ 721 0308 8134      		cpi r24,lo8(65)
+ 722 030a 01F4      		brne .L95
+ 291:../code/MCAL/GPIO/gpio.c ****     {
+ 292:../code/MCAL/GPIO/gpio.c ****     case PORT_A:
+ 293:../code/MCAL/GPIO/gpio.c ****         DDRA = direction;
+ 723               		.loc 1 293 0
+ 724 030c 6ABB      		out 0x1a,r22
+ 725 030e 00C0      		rjmp .L96
+ 726               	.L91:
+ 290:../code/MCAL/GPIO/gpio.c ****     {
+ 727               		.loc 1 290 0
+ 728 0310 8334      		cpi r24,lo8(67)
+ 729 0312 01F0      		breq .L93
+ 730 0314 8434      		cpi r24,lo8(68)
+ 731 0316 01F4      		brne .L95
+ 294:../code/MCAL/GPIO/gpio.c ****         break;
+ 295:../code/MCAL/GPIO/gpio.c ****     case PORT_B:
+ 296:../code/MCAL/GPIO/gpio.c ****         DDRB = direction;
+ 297:../code/MCAL/GPIO/gpio.c ****         break;
+ 298:../code/MCAL/GPIO/gpio.c ****     case PORT_C:
+ 299:../code/MCAL/GPIO/gpio.c ****         DDRC = direction;
+ 300:../code/MCAL/GPIO/gpio.c ****         break;
+ 301:../code/MCAL/GPIO/gpio.c ****     case PORT_D:
+ 302:../code/MCAL/GPIO/gpio.c ****         DDRD = direction;
+ 732               		.loc 1 302 0
+ 733 0318 61BB      		out 0x11,r22
+ 734 031a 00C0      		rjmp .L96
+ 735               	.L90:
+ 296:../code/MCAL/GPIO/gpio.c ****         break;
+ 736               		.loc 1 296 0
+ 737 031c 67BB      		out 0x17,r22
+ 738 031e 00C0      		rjmp .L96
+ 739               	.L93:
+ 299:../code/MCAL/GPIO/gpio.c ****         break;
+ 740               		.loc 1 299 0
+ 741 0320 64BB      		out 0x14,r22
+ 742               	.L96:
+ 288:../code/MCAL/GPIO/gpio.c **** 
+ 743               		.loc 1 288 0
+ 744 0322 80E0      		ldi r24,0
+ 745               	.LVL102:
+ 303:../code/MCAL/GPIO/gpio.c ****         break;
+ 746               		.loc 1 303 0
+ 747 0324 0895      		ret
+ 748               	.LVL103:
+ 749               	.L95:
+ 304:../code/MCAL/GPIO/gpio.c ****     default:
+ 305:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PORT;
+ 750               		.loc 1 305 0
+ 751 0326 82E0      		ldi r24,lo8(2)
+ 752               	.LVL104:
+ 306:../code/MCAL/GPIO/gpio.c ****         break;
+ 307:../code/MCAL/GPIO/gpio.c ****     }
+ 308:../code/MCAL/GPIO/gpio.c **** 
+ 309:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 310:../code/MCAL/GPIO/gpio.c **** }
+ 753               		.loc 1 310 0
+ 754 0328 0895      		ret
+ 755               		.cfi_endproc
+ 756               	.LFE4:
+ 758               	.global	GPIO_writePort
+ 760               	GPIO_writePort:
+ 761               	.LFB5:
+ 311:../code/MCAL/GPIO/gpio.c **** 
+ 312:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_writePort(EN_port_t portNumber, uint8_t value)
+ 313:../code/MCAL/GPIO/gpio.c **** {
+ 762               		.loc 1 313 0
+ 763               		.cfi_startproc
+ 764               	.LVL105:
+ 765               	/* prologue: function */
+ 766               	/* frame size = 0 */
+ 767               	/* stack size = 0 */
+ 768               	.L__stack_usage = 0
+ 314:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 315:../code/MCAL/GPIO/gpio.c ****      * 1-switch over the portNumber
+ 316:../code/MCAL/GPIO/gpio.c ****      *     1.1-in each case fill PORTx register with the content of value
+ 317:../code/MCAL/GPIO/gpio.c ****      *     1.2-1.2-if not A, B, C, or D, then WRONG_PORT
+ 318:../code/MCAL/GPIO/gpio.c ****      * 2-return the result
+ 319:../code/MCAL/GPIO/gpio.c ****      */
+ 320:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 321:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 769               		.loc 1 321 0
+ 770 032a 8234      		cpi r24,lo8(66)
+ 771 032c 01F0      		breq .L99
+ 772 032e 00F4      		brsh .L100
+ 773 0330 8134      		cpi r24,lo8(65)
+ 774 0332 01F4      		brne .L104
+ 322:../code/MCAL/GPIO/gpio.c ****     {
+ 323:../code/MCAL/GPIO/gpio.c ****     case PORT_A:
+ 324:../code/MCAL/GPIO/gpio.c ****         PORTA = value;
+ 775               		.loc 1 324 0
+ 776 0334 6BBB      		out 0x1b,r22
+ 777 0336 00C0      		rjmp .L105
+ 778               	.L100:
+ 321:../code/MCAL/GPIO/gpio.c ****     {
+ 779               		.loc 1 321 0
+ 780 0338 8334      		cpi r24,lo8(67)
+ 781 033a 01F0      		breq .L102
+ 782 033c 8434      		cpi r24,lo8(68)
+ 783 033e 01F4      		brne .L104
+ 325:../code/MCAL/GPIO/gpio.c ****         break;
+ 326:../code/MCAL/GPIO/gpio.c ****     case PORT_B:
+ 327:../code/MCAL/GPIO/gpio.c ****         PORTB = value;
+ 328:../code/MCAL/GPIO/gpio.c ****         break;
+ 329:../code/MCAL/GPIO/gpio.c ****     case PORT_C:
+ 330:../code/MCAL/GPIO/gpio.c ****         PORTC = value;
+ 331:../code/MCAL/GPIO/gpio.c ****         break;
+ 332:../code/MCAL/GPIO/gpio.c ****     case PORT_D:
+ 333:../code/MCAL/GPIO/gpio.c ****         PORTD = value;
+ 784               		.loc 1 333 0
+ 785 0340 62BB      		out 0x12,r22
+ 786 0342 00C0      		rjmp .L105
+ 787               	.L99:
+ 327:../code/MCAL/GPIO/gpio.c ****         break;
+ 788               		.loc 1 327 0
+ 789 0344 68BB      		out 0x18,r22
+ 790 0346 00C0      		rjmp .L105
+ 791               	.L102:
+ 330:../code/MCAL/GPIO/gpio.c ****         break;
+ 792               		.loc 1 330 0
+ 793 0348 65BB      		out 0x15,r22
+ 794               	.L105:
+ 320:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 795               		.loc 1 320 0
+ 796 034a 80E0      		ldi r24,0
+ 797               	.LVL106:
+ 334:../code/MCAL/GPIO/gpio.c ****         break;
+ 798               		.loc 1 334 0
+ 799 034c 0895      		ret
+ 800               	.LVL107:
+ 801               	.L104:
+ 335:../code/MCAL/GPIO/gpio.c ****     default:
+ 336:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PORT;
+ 802               		.loc 1 336 0
+ 803 034e 82E0      		ldi r24,lo8(2)
+ 804               	.LVL108:
+ 337:../code/MCAL/GPIO/gpio.c ****         break;
+ 338:../code/MCAL/GPIO/gpio.c ****     }
+ 339:../code/MCAL/GPIO/gpio.c **** 
+ 340:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 341:../code/MCAL/GPIO/gpio.c **** }
+ 805               		.loc 1 341 0
+ 806 0350 0895      		ret
+ 807               		.cfi_endproc
+ 808               	.LFE5:
+ 810               	.global	GPIO_readPort
+ 812               	GPIO_readPort:
+ 813               	.LFB6:
+ 342:../code/MCAL/GPIO/gpio.c **** 
+ 343:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_readPort(EN_port_t portNumber, uint8_t *value)
+ 344:../code/MCAL/GPIO/gpio.c **** {
+ 814               		.loc 1 344 0
+ 815               		.cfi_startproc
+ 816               	.LVL109:
+ 817               	/* prologue: function */
+ 818               	/* frame size = 0 */
+ 819               	/* stack size = 0 */
+ 820               	.L__stack_usage = 0
+ 821 0352 FB01      		movw r30,r22
+ 822               	.LVL110:
+ 345:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 346:../code/MCAL/GPIO/gpio.c ****      * 1-switch over the portNumber
+ 347:../code/MCAL/GPIO/gpio.c ****      *      1.1-in each case fill the value buffer with the content of PINx register
+ 348:../code/MCAL/GPIO/gpio.c ****      *      1.2-1.2-if not A, B, C, or D, then WRONG_PORT
+ 349:../code/MCAL/GPIO/gpio.c ****      * 2-return the result
+ 350:../code/MCAL/GPIO/gpio.c ****      */
+ 351:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 352:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 823               		.loc 1 352 0
+ 824 0354 8234      		cpi r24,lo8(66)
+ 825 0356 01F0      		breq .L108
+ 826 0358 00F4      		brsh .L109
+ 827 035a 8134      		cpi r24,lo8(65)
+ 828 035c 01F4      		brne .L113
+ 353:../code/MCAL/GPIO/gpio.c ****     {
+ 354:../code/MCAL/GPIO/gpio.c ****     case PORT_A:
+ 355:../code/MCAL/GPIO/gpio.c ****         *value = PINA;
+ 829               		.loc 1 355 0
+ 830 035e 89B3      		in r24,0x19
+ 831               	.LVL111:
+ 832 0360 00C0      		rjmp .L114
+ 833               	.LVL112:
+ 834               	.L109:
+ 352:../code/MCAL/GPIO/gpio.c ****     {
+ 835               		.loc 1 352 0
+ 836 0362 8334      		cpi r24,lo8(67)
+ 837 0364 01F0      		breq .L111
+ 838 0366 8434      		cpi r24,lo8(68)
+ 839 0368 01F4      		brne .L113
+ 356:../code/MCAL/GPIO/gpio.c ****         break;
+ 357:../code/MCAL/GPIO/gpio.c ****     case PORT_B:
+ 358:../code/MCAL/GPIO/gpio.c ****         *value = PINB;
+ 359:../code/MCAL/GPIO/gpio.c ****         break;
+ 360:../code/MCAL/GPIO/gpio.c ****     case PORT_C:
+ 361:../code/MCAL/GPIO/gpio.c ****         *value = PINC;
+ 362:../code/MCAL/GPIO/gpio.c ****         break;
+ 363:../code/MCAL/GPIO/gpio.c ****     case PORT_D:
+ 364:../code/MCAL/GPIO/gpio.c ****         *value = PIND;
+ 840               		.loc 1 364 0
+ 841 036a 80B3      		in r24,0x10
+ 842               	.LVL113:
+ 843 036c 00C0      		rjmp .L114
+ 844               	.LVL114:
+ 845               	.L108:
+ 358:../code/MCAL/GPIO/gpio.c ****         break;
+ 846               		.loc 1 358 0
+ 847 036e 86B3      		in r24,0x16
+ 848               	.LVL115:
+ 849 0370 00C0      		rjmp .L114
+ 850               	.LVL116:
+ 851               	.L111:
+ 361:../code/MCAL/GPIO/gpio.c ****         break;
+ 852               		.loc 1 361 0
+ 853 0372 83B3      		in r24,0x13
+ 854               	.LVL117:
+ 855               	.L114:
+ 856               		.loc 1 364 0
+ 857 0374 8083      		st Z,r24
+ 351:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 858               		.loc 1 351 0
+ 859 0376 80E0      		ldi r24,0
+ 365:../code/MCAL/GPIO/gpio.c ****         break;
+ 860               		.loc 1 365 0
+ 861 0378 0895      		ret
+ 862               	.LVL118:
+ 863               	.L113:
+ 366:../code/MCAL/GPIO/gpio.c ****     default:
+ 367:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PORT;
+ 864               		.loc 1 367 0
+ 865 037a 82E0      		ldi r24,lo8(2)
+ 866               	.LVL119:
+ 368:../code/MCAL/GPIO/gpio.c ****         break;
+ 369:../code/MCAL/GPIO/gpio.c ****     }
+ 370:../code/MCAL/GPIO/gpio.c **** 
+ 371:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 372:../code/MCAL/GPIO/gpio.c **** }
+ 867               		.loc 1 372 0
+ 868 037c 0895      		ret
+ 869               		.cfi_endproc
+ 870               	.LFE6:
+ 872               	.global	GPIO_togglePort
+ 874               	GPIO_togglePort:
+ 875               	.LFB7:
+ 373:../code/MCAL/GPIO/gpio.c **** 
+ 374:../code/MCAL/GPIO/gpio.c **** EN_gpioError_t GPIO_togglePort(EN_port_t portNumber)
+ 375:../code/MCAL/GPIO/gpio.c **** {
+ 876               		.loc 1 375 0
+ 877               		.cfi_startproc
+ 878               	.LVL120:
+ 879               	/* prologue: function */
+ 880               	/* frame size = 0 */
+ 881               	/* stack size = 0 */
+ 882               	.L__stack_usage = 0
+ 376:../code/MCAL/GPIO/gpio.c ****     /* function skeleton
+ 377:../code/MCAL/GPIO/gpio.c ****      * 1-switch over the portNumber
+ 378:../code/MCAL/GPIO/gpio.c ****      *      1.1-in each case toggle the content of PORTx register
+ 379:../code/MCAL/GPIO/gpio.c ****      *      1.2-1.2-if not A, B, C, or D, then WRONG_PORT
+ 380:../code/MCAL/GPIO/gpio.c ****      * 2-return the result
+ 381:../code/MCAL/GPIO/gpio.c ****      */
+ 382:../code/MCAL/GPIO/gpio.c ****     EN_gpioError_t ret = GPIO_OK;
+ 383:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 883               		.loc 1 383 0
+ 884 037e 8234      		cpi r24,lo8(66)
+ 885 0380 01F0      		breq .L117
+ 886 0382 00F4      		brsh .L118
+ 887 0384 8134      		cpi r24,lo8(65)
+ 888 0386 01F4      		brne .L122
+ 384:../code/MCAL/GPIO/gpio.c ****     {
+ 385:../code/MCAL/GPIO/gpio.c ****     case PORT_A:
+ 386:../code/MCAL/GPIO/gpio.c ****         PORTA = ~PORTA;
+ 889               		.loc 1 386 0
+ 890 0388 8BB3      		in r24,0x1b
+ 891               	.LVL121:
+ 892 038a 8095      		com r24
+ 893 038c 8BBB      		out 0x1b,r24
+ 894 038e 00C0      		rjmp .L123
+ 895               	.LVL122:
+ 896               	.L118:
+ 383:../code/MCAL/GPIO/gpio.c ****     {
+ 897               		.loc 1 383 0
+ 898 0390 8334      		cpi r24,lo8(67)
+ 899 0392 01F0      		breq .L120
+ 900 0394 8434      		cpi r24,lo8(68)
+ 901 0396 01F4      		brne .L122
+ 387:../code/MCAL/GPIO/gpio.c ****         break;
+ 388:../code/MCAL/GPIO/gpio.c ****     case PORT_B:
+ 389:../code/MCAL/GPIO/gpio.c ****         PORTB = ~PORTB;
+ 390:../code/MCAL/GPIO/gpio.c ****         break;
+ 391:../code/MCAL/GPIO/gpio.c ****     case PORT_C:
+ 392:../code/MCAL/GPIO/gpio.c ****         PORTC = ~PORTC;
+ 393:../code/MCAL/GPIO/gpio.c ****         break;
+ 394:../code/MCAL/GPIO/gpio.c ****     case PORT_D:
+ 395:../code/MCAL/GPIO/gpio.c ****         PORTD = ~PORTD;
+ 902               		.loc 1 395 0
+ 903 0398 82B3      		in r24,0x12
+ 904               	.LVL123:
+ 905 039a 8095      		com r24
+ 906 039c 82BB      		out 0x12,r24
+ 907 039e 00C0      		rjmp .L123
+ 908               	.LVL124:
+ 909               	.L117:
+ 389:../code/MCAL/GPIO/gpio.c ****         break;
+ 910               		.loc 1 389 0
+ 911 03a0 88B3      		in r24,0x18
+ 912               	.LVL125:
+ 913 03a2 8095      		com r24
+ 914 03a4 88BB      		out 0x18,r24
+ 915 03a6 00C0      		rjmp .L123
+ 916               	.LVL126:
+ 917               	.L120:
+ 392:../code/MCAL/GPIO/gpio.c ****         break;
+ 918               		.loc 1 392 0
+ 919 03a8 85B3      		in r24,0x15
+ 920               	.LVL127:
+ 921 03aa 8095      		com r24
+ 922 03ac 85BB      		out 0x15,r24
+ 923               	.L123:
+ 382:../code/MCAL/GPIO/gpio.c ****     switch (portNumber)
+ 924               		.loc 1 382 0
+ 925 03ae 80E0      		ldi r24,0
+ 396:../code/MCAL/GPIO/gpio.c ****         break;
+ 926               		.loc 1 396 0
+ 927 03b0 0895      		ret
+ 928               	.LVL128:
+ 929               	.L122:
+ 397:../code/MCAL/GPIO/gpio.c ****     default:
+ 398:../code/MCAL/GPIO/gpio.c ****         ret = WRONG_PORT;
+ 930               		.loc 1 398 0
+ 931 03b2 82E0      		ldi r24,lo8(2)
+ 932               	.LVL129:
+ 399:../code/MCAL/GPIO/gpio.c ****         break;
+ 400:../code/MCAL/GPIO/gpio.c ****     }
+ 401:../code/MCAL/GPIO/gpio.c **** 
+ 402:../code/MCAL/GPIO/gpio.c ****     return ret;
+ 403:../code/MCAL/GPIO/gpio.c **** }...
+ 933               		.loc 1 403 0
+ 934 03b4 0895      		ret
+ 935               		.cfi_endproc
+ 936               	.LFE7:
+ 938               	.Letext0:
+ 939               		.file 2 "../code/MCAL/GPIO/../../UTALITIES/types.h"
+ 940               		.file 3 "../code/MCAL/GPIO/gpio.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 gpio.c
+     /tmp/ccfMdNcH.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccfMdNcH.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccfMdNcH.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccfMdNcH.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccfMdNcH.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccfMdNcH.s:12     .text:0000000000000000 GPIO_initPin
+     /tmp/ccfMdNcH.s:259    .text:0000000000000118 GPIO_writePin
+     /tmp/ccfMdNcH.s:505    .text:0000000000000230 GPIO_readPin
+     /tmp/ccfMdNcH.s:584    .text:0000000000000278 GPIO_togglePin
+     /tmp/ccfMdNcH.s:708    .text:0000000000000302 GPIO_initPort
+     /tmp/ccfMdNcH.s:760    .text:000000000000032a GPIO_writePort
+     /tmp/ccfMdNcH.s:812    .text:0000000000000352 GPIO_readPort
+     /tmp/ccfMdNcH.s:874    .text:000000000000037e GPIO_togglePort
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,769 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                              ../code/APPLICATION/app.o (__udivmodqi4)
+/usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                              /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o (exit)
+/usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                              ../code/ECUAL/KEYPAD/keypad.o (__do_copy_data)
+/usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                              ../code/MCAL/TIMER/timer.o (__do_clear_bss)
+
+Allocating common symbols
+Common symbol       size              file
+
+timer               0x3               ../code/APPLICATION/app.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x0000000000020000 xr
+data             0x0000000000800060 0x000000000000ffa0 rw !x
+eeprom           0x0000000000810000 0x0000000000010000 rw !x
+fuse             0x0000000000820000 0x0000000000000002 rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+user_signatures  0x0000000000850000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+LOAD ../code/main.o
+LOAD ../code/MCAL/GPIO/gpio.o
+LOAD ../code/ECUAL/BUTTON/button.o
+LOAD ../code/ECUAL/LED/led.o
+LOAD ../code/ECUAL/KEYPAD/keypad.o
+LOAD ../code/MCAL/TIMER/timer.o
+LOAD ../code/MCAL/GIE/gie.o
+LOAD ../code/MCAL/EXTI/exti.o
+LOAD ../code/MCAL/ADC/adc.o
+LOAD ../code/APPLICATION/app.o
+LOAD /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libm.a
+START GROUP
+LOAD /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a
+LOAD /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libm.a
+LOAD /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libc.a
+LOAD /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libatmega32.a
+END GROUP
+                0x0000000000000000                __TEXT_REGION_ORIGIN__ = DEFINED (__TEXT_REGION_ORIGIN__)?__TEXT_REGION_ORIGIN__:0x0
+                0x0000000000800060                __DATA_REGION_ORIGIN__ = DEFINED (__DATA_REGION_ORIGIN__)?__DATA_REGION_ORIGIN__:0x800060
+                0x0000000000020000                __TEXT_REGION_LENGTH__ = DEFINED (__TEXT_REGION_LENGTH__)?__TEXT_REGION_LENGTH__:0x20000
+                0x000000000000ffa0                __DATA_REGION_LENGTH__ = DEFINED (__DATA_REGION_LENGTH__)?__DATA_REGION_LENGTH__:0xffa0
+                0x0000000000010000                __EEPROM_REGION_LENGTH__ = DEFINED (__EEPROM_REGION_LENGTH__)?__EEPROM_REGION_LENGTH__:0x10000
+                [0x0000000000000002]                __FUSE_REGION_LENGTH__ = DEFINED (__FUSE_REGION_LENGTH__)?__FUSE_REGION_LENGTH__:0x400
+                0x0000000000000400                __LOCK_REGION_LENGTH__ = DEFINED (__LOCK_REGION_LENGTH__)?__LOCK_REGION_LENGTH__:0x400
+                0x0000000000000400                __SIGNATURE_REGION_LENGTH__ = DEFINED (__SIGNATURE_REGION_LENGTH__)?__SIGNATURE_REGION_LENGTH__:0x400
+                0x0000000000000400                __USER_SIGNATURE_REGION_LENGTH__ = DEFINED (__USER_SIGNATURE_REGION_LENGTH__)?__USER_SIGNATURE_REGION_LENGTH__:0x400
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0xc68
+ *(.vectors)
+ .vectors       0x0000000000000000       0x54 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+                0x0000000000000000                __vectors
+                0x0000000000000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+                0x0000000000000054                . = ALIGN (0x2)
+                0x0000000000000054                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000000000000054        0x0 linker stubs
+ *(.trampolines*)
+                0x0000000000000054                __trampolines_end = .
+ *libprintf_flt.a:*(.progmem.data)
+ *libc.a:*(.progmem.data)
+ *(.progmem*)
+                0x0000000000000054                . = ALIGN (0x2)
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000000000000054                __ctors_start = .
+ *(.ctors)
+                0x0000000000000054                __ctors_end = .
+                0x0000000000000054                __dtors_start = .
+ *(.dtors)
+                0x0000000000000054                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000000000000054        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+                0x0000000000000054                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000000000000054        0xc /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x0000000000000060       0x16 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000000060                __do_copy_data
+ .init4         0x0000000000000076       0x10 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000000076                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x0000000000000086        0x8 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ *(.init9)
+ *(.text)
+ .text          0x000000000000008e        0x4 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+                0x000000000000008e                __vector_12
+                0x000000000000008e                __bad_interrupt
+                0x000000000000008e                __vector_6
+                0x000000000000008e                __vector_13
+                0x000000000000008e                __vector_17
+                0x000000000000008e                __vector_19
+                0x000000000000008e                __vector_7
+                0x000000000000008e                __vector_5
+                0x000000000000008e                __vector_4
+                0x000000000000008e                __vector_9
+                0x000000000000008e                __vector_15
+                0x000000000000008e                __vector_8
+                0x000000000000008e                __vector_14
+                0x000000000000008e                __vector_16
+                0x000000000000008e                __vector_18
+                0x000000000000008e                __vector_20
+ .text          0x0000000000000092        0x0 ../code/main.o
+ .text          0x0000000000000092      0x3b6 ../code/MCAL/GPIO/gpio.o
+                0x0000000000000092                GPIO_initPin
+                0x00000000000001aa                GPIO_writePin
+                0x00000000000002c2                GPIO_readPin
+                0x000000000000030a                GPIO_togglePin
+                0x0000000000000394                GPIO_initPort
+                0x00000000000003bc                GPIO_writePort
+                0x00000000000003e4                GPIO_readPort
+                0x0000000000000410                GPIO_togglePort
+ .text          0x0000000000000448       0x42 ../code/ECUAL/BUTTON/button.o
+                0x0000000000000448                BUTTON_init
+                0x0000000000000466                BUTTON_getState
+ .text          0x000000000000048a       0x6e ../code/ECUAL/LED/led.o
+                0x000000000000048a                LED_init
+                0x00000000000004a6                LED_on
+                0x00000000000004c2                LED_off
+                0x00000000000004de                LED_toggle
+ .text          0x00000000000004f8      0x1dc ../code/ECUAL/KEYPAD/keypad.o
+                0x00000000000004f8                KEYPAD_init
+                0x0000000000000598                KEYPAD_getPressedKey
+ .text          0x00000000000006d4      0x196 ../code/MCAL/TIMER/timer.o
+                0x00000000000006d4                TIMER0_init
+                0x000000000000075c                TIMER0_start
+                0x000000000000076e                TIMER0_stop
+                0x0000000000000782                TIMER0_setTimerValue
+                0x0000000000000786                TIMER0_getTimerValue
+                0x000000000000078e                Timer0_setOutputCompareValue
+                0x0000000000000792                TIMER0_OVF_interruptEnable
+                0x000000000000079a                TIMER0_OVF_interruptDisable
+                0x00000000000007a2                TIMER0_OC_interruptEnable
+                0x00000000000007aa                TIMER0_OC_interruptDisable
+                0x00000000000007b2                __vector_10
+                0x0000000000000804                __vector_11
+                0x0000000000000856                TIMER0_OVF_setCallBackFunction
+                0x0000000000000860                TIMER0_OC_setCallBackFunction
+ .text          0x000000000000086a       0x10 ../code/MCAL/GIE/gie.o
+                0x000000000000086a                GIE_enable
+                0x0000000000000872                GIE_disable
+ .text          0x000000000000087a      0x1b6 ../code/MCAL/EXTI/exti.o
+                0x000000000000087a                EXTI0_init
+                0x00000000000008ba                EXTI1_init
+                0x00000000000008fa                EXTI2_init
+                0x000000000000091c                EXTI0_setCallBack
+                0x0000000000000926                __vector_1
+                0x0000000000000978                EXTI1_setCallBack
+                0x0000000000000982                __vector_2
+                0x00000000000009d4                EXTI2_setCallBack
+                0x00000000000009de                __vector_3
+ .text          0x0000000000000a30        0x0 ../code/MCAL/ADC/adc.o
+ .text          0x0000000000000a30      0x212 ../code/APPLICATION/app.o
+                0x0000000000000a30                ISR
+                0x0000000000000a44                timerISR
+                0x0000000000000a50                delayOneTenthSec
+                0x0000000000000a80                APP_start
+ .text          0x0000000000000c42        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text          0x0000000000000c42        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text          0x0000000000000c42        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text          0x0000000000000c42        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000000c42                . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x0000000000000c42        0xa ../code/main.o
+                0x0000000000000c42                main
+ .text.libgcc.mul
+                0x0000000000000c4c        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.div
+                0x0000000000000c4c       0x18 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000000c4c                __udivmodqi4
+ .text.libgcc   0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.prologue
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.builtins
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.fmul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.fixed
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .text.libgcc.mul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000000c64                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000c64        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000000c64                exit
+                0x0000000000000c64                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000c64        0x4 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ *(.fini0)
+                0x0000000000000c68                _etext = .
+
+.data           0x0000000000800060       0x18 load address 0x0000000000000c68
+                0x0000000000800060                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .data          0x0000000000800060        0x0 ../code/main.o
+ .data          0x0000000000800060        0x0 ../code/MCAL/GPIO/gpio.o
+ .data          0x0000000000800060        0x0 ../code/ECUAL/BUTTON/button.o
+ .data          0x0000000000800060        0x0 ../code/ECUAL/LED/led.o
+ .data          0x0000000000800060        0x0 ../code/ECUAL/KEYPAD/keypad.o
+ .data          0x0000000000800060        0x0 ../code/MCAL/TIMER/timer.o
+ .data          0x0000000000800060        0x0 ../code/MCAL/GIE/gie.o
+ .data          0x0000000000800060        0x0 ../code/MCAL/EXTI/exti.o
+ .data          0x0000000000800060        0x0 ../code/MCAL/ADC/adc.o
+ .data          0x0000000000800060        0x0 ../code/APPLICATION/app.o
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ *(.data*)
+ *(.gnu.linkonce.d*)
+ *(.rodata)
+ .rodata        0x0000000000800060       0x18 ../code/ECUAL/KEYPAD/keypad.o
+ *(.rodata*)
+ *(.gnu.linkonce.r*)
+                0x0000000000800078                . = ALIGN (0x2)
+                0x0000000000800078                _edata = .
+                0x0000000000800078                PROVIDE (__data_end, .)
+
+.bss            0x0000000000800078       0x10
+                0x0000000000800078                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0000000000800078        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .bss           0x0000000000800078        0x0 ../code/main.o
+ .bss           0x0000000000800078        0x0 ../code/MCAL/GPIO/gpio.o
+ .bss           0x0000000000800078        0x0 ../code/ECUAL/BUTTON/button.o
+ .bss           0x0000000000800078        0x0 ../code/ECUAL/LED/led.o
+ .bss           0x0000000000800078        0x0 ../code/ECUAL/KEYPAD/keypad.o
+ .bss           0x0000000000800078        0x4 ../code/MCAL/TIMER/timer.o
+ .bss           0x000000000080007c        0x0 ../code/MCAL/GIE/gie.o
+ .bss           0x000000000080007c        0x6 ../code/MCAL/EXTI/exti.o
+                0x000000000080007c                EXTI2_func
+                0x000000000080007e                EXTI1_func
+                0x0000000000800080                EXTI0_func
+ .bss           0x0000000000800082        0x0 ../code/MCAL/ADC/adc.o
+ .bss           0x0000000000800082        0x3 ../code/APPLICATION/app.o
+                0x0000000000800082                timerCounter
+                0x0000000000800083                counter
+                0x0000000000800084                currentState
+ .bss           0x0000000000800085        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .bss           0x0000000000800085        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .bss           0x0000000000800085        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .bss           0x0000000000800085        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0000000000800085        0x3 ../code/APPLICATION/app.o
+                0x0000000000800085                timer
+                0x0000000000800088                PROVIDE (__bss_end, .)
+                0x0000000000000c68                __data_load_start = LOADADDR (.data)
+                0x0000000000000c80                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x0000000000800088        0x0
+                [!provide]                        PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                [!provide]                        PROVIDE (__noinit_end, .)
+                0x0000000000800088                _end = .
+                [!provide]                        PROVIDE (__heap_start, .)
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x11
+ *(.comment)
+ .comment       0x0000000000000000       0x11 ../code/main.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000011       0x12 ../code/MCAL/GPIO/gpio.o
+ .comment       0x0000000000000011       0x12 ../code/ECUAL/BUTTON/button.o
+ .comment       0x0000000000000011       0x12 ../code/ECUAL/LED/led.o
+ .comment       0x0000000000000011       0x12 ../code/ECUAL/KEYPAD/keypad.o
+ .comment       0x0000000000000011       0x12 ../code/MCAL/TIMER/timer.o
+ .comment       0x0000000000000011       0x12 ../code/MCAL/GIE/gie.o
+ .comment       0x0000000000000011       0x12 ../code/MCAL/EXTI/exti.o
+ .comment       0x0000000000000011       0x12 ../code/MCAL/ADC/adc.o
+ .comment       0x0000000000000011       0x12 ../code/APPLICATION/app.o
+
+.note.gnu.avr.deviceinfo
+                0x0000000000000000       0x3c
+ .note.gnu.avr.deviceinfo
+                0x0000000000000000       0x3c /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+
+.note.gnu.build-id
+ *(.note.gnu.build-id)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x138
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x20 ../code/main.o
+ .debug_aranges
+                0x0000000000000020       0x20 ../code/MCAL/GPIO/gpio.o
+ .debug_aranges
+                0x0000000000000040       0x20 ../code/ECUAL/BUTTON/button.o
+ .debug_aranges
+                0x0000000000000060       0x20 ../code/ECUAL/LED/led.o
+ .debug_aranges
+                0x0000000000000080       0x20 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_aranges
+                0x00000000000000a0       0x20 ../code/MCAL/TIMER/timer.o
+ .debug_aranges
+                0x00000000000000c0       0x20 ../code/MCAL/GIE/gie.o
+ .debug_aranges
+                0x00000000000000e0       0x20 ../code/MCAL/EXTI/exti.o
+ .debug_aranges
+                0x0000000000000100       0x18 ../code/MCAL/ADC/adc.o
+ .debug_aranges
+                0x0000000000000118       0x20 ../code/APPLICATION/app.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0x2184
+ *(.debug_info .gnu.linkonce.wi.*)
+ .debug_info    0x0000000000000000      0x4e6 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .debug_info    0x00000000000004e6       0xa5 ../code/main.o
+ .debug_info    0x000000000000058b      0x3eb ../code/MCAL/GPIO/gpio.o
+ .debug_info    0x0000000000000976      0x296 ../code/ECUAL/BUTTON/button.o
+ .debug_info    0x0000000000000c0c      0x32b ../code/ECUAL/LED/led.o
+ .debug_info    0x0000000000000f37      0x481 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_info    0x00000000000013b8      0x38e ../code/MCAL/TIMER/timer.o
+ .debug_info    0x0000000000001746       0x9c ../code/MCAL/GIE/gie.o
+ .debug_info    0x00000000000017e2      0x282 ../code/MCAL/EXTI/exti.o
+ .debug_info    0x0000000000001a64       0x5d ../code/MCAL/ADC/adc.o
+ .debug_info    0x0000000000001ac1      0x6c3 ../code/APPLICATION/app.o
+
+.debug_abbrev   0x0000000000000000      0xc81
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x4a3 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .debug_abbrev  0x00000000000004a3       0x65 ../code/main.o
+ .debug_abbrev  0x0000000000000508      0x102 ../code/MCAL/GPIO/gpio.o
+ .debug_abbrev  0x000000000000060a       0xe4 ../code/ECUAL/BUTTON/button.o
+ .debug_abbrev  0x00000000000006ee       0xe6 ../code/ECUAL/LED/led.o
+ .debug_abbrev  0x00000000000007d4       0xf7 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_abbrev  0x00000000000008cb      0x112 ../code/MCAL/TIMER/timer.o
+ .debug_abbrev  0x00000000000009dd       0x44 ../code/MCAL/GIE/gie.o
+ .debug_abbrev  0x0000000000000a21       0xe0 ../code/MCAL/EXTI/exti.o
+ .debug_abbrev  0x0000000000000b01       0x1b ../code/MCAL/ADC/adc.o
+ .debug_abbrev  0x0000000000000b1c      0x165 ../code/APPLICATION/app.o
+
+.debug_line     0x0000000000000000      0xecb
+ *(.debug_line .debug_line.* .debug_line_end)
+ .debug_line    0x0000000000000000       0x1a /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .debug_line    0x000000000000001a       0x63 ../code/main.o
+ .debug_line    0x000000000000007d      0x345 ../code/MCAL/GPIO/gpio.o
+ .debug_line    0x00000000000003c2       0xd2 ../code/ECUAL/BUTTON/button.o
+ .debug_line    0x0000000000000494      0x11a ../code/ECUAL/LED/led.o
+ .debug_line    0x00000000000005ae      0x190 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_line    0x000000000000073e      0x1dd ../code/MCAL/TIMER/timer.o
+ .debug_line    0x000000000000091b       0x80 ../code/MCAL/GIE/gie.o
+ .debug_line    0x000000000000099b      0x1c7 ../code/MCAL/EXTI/exti.o
+ .debug_line    0x0000000000000b62       0x1a ../code/MCAL/ADC/adc.o
+ .debug_line    0x0000000000000b7c      0x34f ../code/APPLICATION/app.o
+
+.debug_frame    0x0000000000000000      0x59c
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000       0x24 ../code/main.o
+ .debug_frame   0x0000000000000024       0x94 ../code/MCAL/GPIO/gpio.o
+ .debug_frame   0x00000000000000b8       0x34 ../code/ECUAL/BUTTON/button.o
+ .debug_frame   0x00000000000000ec       0x54 ../code/ECUAL/LED/led.o
+ .debug_frame   0x0000000000000140       0x84 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_frame   0x00000000000001c4      0x19c ../code/MCAL/TIMER/timer.o
+ .debug_frame   0x0000000000000360       0x34 ../code/MCAL/GIE/gie.o
+ .debug_frame   0x0000000000000394      0x1a0 ../code/MCAL/EXTI/exti.o
+ .debug_frame   0x0000000000000534       0x68 ../code/APPLICATION/app.o
+
+.debug_str      0x0000000000000000      0xb6c
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x196 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .debug_str     0x0000000000000196      0x120 ../code/main.o
+                                        0x133 (size before relaxing)
+ .debug_str     0x00000000000002b6      0x17e ../code/MCAL/GPIO/gpio.o
+                                        0x293 (size before relaxing)
+ .debug_str     0x0000000000000434       0xb9 ../code/ECUAL/BUTTON/button.o
+                                        0x29f (size before relaxing)
+ .debug_str     0x00000000000004ed       0x85 ../code/ECUAL/LED/led.o
+                                        0x275 (size before relaxing)
+ .debug_str     0x0000000000000572       0x8d ../code/ECUAL/KEYPAD/keypad.o
+                                        0x22e (size before relaxing)
+ .debug_str     0x00000000000005ff      0x30e ../code/MCAL/TIMER/timer.o
+                                        0x431 (size before relaxing)
+ .debug_str     0x000000000000090d       0x2e ../code/MCAL/GIE/gie.o
+                                        0x14b (size before relaxing)
+ .debug_str     0x000000000000093b      0x13e ../code/MCAL/EXTI/exti.o
+                                        0x270 (size before relaxing)
+ .debug_str     0x0000000000000a79       0x17 ../code/MCAL/ADC/adc.o
+                                        0x12c (size before relaxing)
+ .debug_str     0x0000000000000a90       0xdc ../code/APPLICATION/app.o
+                                        0x524 (size before relaxing)
+
+.debug_loc      0x0000000000000000     0x1493
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000      0x910 ../code/MCAL/GPIO/gpio.o
+ .debug_loc     0x0000000000000910      0x111 ../code/ECUAL/BUTTON/button.o
+ .debug_loc     0x0000000000000a21      0x1e0 ../code/ECUAL/LED/led.o
+ .debug_loc     0x0000000000000c01      0x164 ../code/ECUAL/KEYPAD/keypad.o
+ .debug_loc     0x0000000000000d65      0x285 ../code/MCAL/TIMER/timer.o
+ .debug_loc     0x0000000000000fea      0x41b ../code/MCAL/EXTI/exti.o
+ .debug_loc     0x0000000000001405       0x8e ../code/APPLICATION/app.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x0000000000000000       0x10
+ *(.debug_ranges)
+ .debug_ranges  0x0000000000000000       0x10 ../code/main.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(virtualglove.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+APP_start                                         ../code/APPLICATION/app.o
+                                                  ../code/main.o
+BUTTON_getState                                   ../code/ECUAL/BUTTON/button.o
+BUTTON_init                                       ../code/ECUAL/BUTTON/button.o
+                                                  ../code/APPLICATION/app.o
+EXTI0_func                                        ../code/MCAL/EXTI/exti.o
+EXTI0_init                                        ../code/MCAL/EXTI/exti.o
+                                                  ../code/APPLICATION/app.o
+EXTI0_setCallBack                                 ../code/MCAL/EXTI/exti.o
+                                                  ../code/APPLICATION/app.o
+EXTI1_func                                        ../code/MCAL/EXTI/exti.o
+EXTI1_init                                        ../code/MCAL/EXTI/exti.o
+EXTI1_setCallBack                                 ../code/MCAL/EXTI/exti.o
+EXTI2_func                                        ../code/MCAL/EXTI/exti.o
+EXTI2_init                                        ../code/MCAL/EXTI/exti.o
+EXTI2_setCallBack                                 ../code/MCAL/EXTI/exti.o
+GIE_disable                                       ../code/MCAL/GIE/gie.o
+GIE_enable                                        ../code/MCAL/GIE/gie.o
+                                                  ../code/APPLICATION/app.o
+GPIO_initPin                                      ../code/MCAL/GPIO/gpio.o
+                                                  ../code/APPLICATION/app.o
+                                                  ../code/ECUAL/KEYPAD/keypad.o
+                                                  ../code/ECUAL/LED/led.o
+                                                  ../code/ECUAL/BUTTON/button.o
+GPIO_initPort                                     ../code/MCAL/GPIO/gpio.o
+GPIO_readPin                                      ../code/MCAL/GPIO/gpio.o
+                                                  ../code/ECUAL/KEYPAD/keypad.o
+                                                  ../code/ECUAL/BUTTON/button.o
+GPIO_readPort                                     ../code/MCAL/GPIO/gpio.o
+GPIO_togglePin                                    ../code/MCAL/GPIO/gpio.o
+                                                  ../code/ECUAL/LED/led.o
+GPIO_togglePort                                   ../code/MCAL/GPIO/gpio.o
+GPIO_writePin                                     ../code/MCAL/GPIO/gpio.o
+                                                  ../code/ECUAL/KEYPAD/keypad.o
+                                                  ../code/ECUAL/LED/led.o
+GPIO_writePort                                    ../code/MCAL/GPIO/gpio.o
+ISR                                               ../code/APPLICATION/app.o
+KEYPAD_getPressedKey                              ../code/ECUAL/KEYPAD/keypad.o
+KEYPAD_init                                       ../code/ECUAL/KEYPAD/keypad.o
+LED_init                                          ../code/ECUAL/LED/led.o
+                                                  ../code/APPLICATION/app.o
+LED_off                                           ../code/ECUAL/LED/led.o
+                                                  ../code/APPLICATION/app.o
+LED_on                                            ../code/ECUAL/LED/led.o
+                                                  ../code/APPLICATION/app.o
+LED_toggle                                        ../code/ECUAL/LED/led.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_OC_interruptDisable                        ../code/MCAL/TIMER/timer.o
+TIMER0_OC_interruptEnable                         ../code/MCAL/TIMER/timer.o
+TIMER0_OC_setCallBackFunction                     ../code/MCAL/TIMER/timer.o
+TIMER0_OVF_interruptDisable                       ../code/MCAL/TIMER/timer.o
+TIMER0_OVF_interruptEnable                        ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_OVF_setCallBackFunction                    ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_getTimerValue                              ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_init                                       ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_setTimerValue                              ../code/MCAL/TIMER/timer.o
+TIMER0_start                                      ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+TIMER0_stop                                       ../code/MCAL/TIMER/timer.o
+                                                  ../code/APPLICATION/app.o
+Timer0_setOutputCompareValue                      ../code/MCAL/TIMER/timer.o
+__FUSE_REGION_LENGTH__                            /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__bad_interrupt                                   /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__bss_end                                         /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+__bss_start                                       /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+__data_start                                      /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+__do_clear_bss                                    /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                                                  ../code/APPLICATION/app.o
+                                                  ../code/MCAL/EXTI/exti.o
+                                                  ../code/MCAL/TIMER/timer.o
+__do_copy_data                                    /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                                                  ../code/ECUAL/KEYPAD/keypad.o
+__heap_end                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__init                                            /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__stack                                           /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__udivmodqi4                                      /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                                                  ../code/APPLICATION/app.o
+__vector_1                                        ../code/MCAL/EXTI/exti.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_10                                       ../code/MCAL/TIMER/timer.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_11                                       ../code/MCAL/TIMER/timer.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_12                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_13                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_14                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_15                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_16                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_17                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_18                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_19                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_2                                        ../code/MCAL/EXTI/exti.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_20                                       /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_3                                        ../code/MCAL/EXTI/exti.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_4                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_5                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_6                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_7                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_8                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_9                                        /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vector_default                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+__vectors                                         /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+_exit                                             /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+counter                                           ../code/APPLICATION/app.o
+currentState                                      ../code/APPLICATION/app.o
+delayOneTenthSec                                  ../code/APPLICATION/app.o
+exit                                              /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+main                                              ../code/main.o
+                                                  /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+timer                                             ../code/APPLICATION/app.o
+timerCounter                                      ../code/APPLICATION/app.o
+timerISR                                          ../code/APPLICATION/app.o

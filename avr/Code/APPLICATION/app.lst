@@ -1,0 +1,768 @@
+   1               		.file	"app.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	ISR
+  12               	ISR:
+  13               	.LFB2:
+  14               		.file 1 "../code/APPLICATION/app.c"
+   1:../code/APPLICATION/app.c **** #include "app.h"
+   2:../code/APPLICATION/app.c **** 
+   3:../code/APPLICATION/app.c **** EN_systemState_t currentState = CAR;
+   4:../code/APPLICATION/app.c **** uint8_t counter = 0, timerCounter = 0;
+   5:../code/APPLICATION/app.c **** ST_timer0_t timer;
+   6:../code/APPLICATION/app.c **** 
+   7:../code/APPLICATION/app.c **** void APP_start(void)
+   8:../code/APPLICATION/app.c **** {
+   9:../code/APPLICATION/app.c ****     /*---------------------------------------------------
+  10:../code/APPLICATION/app.c ****      *SETUP CODE
+  11:../code/APPLICATION/app.c ****      *---------------------------------------------------*/
+  12:../code/APPLICATION/app.c ****     GPIO_initPin(PIN_0, PORT_C, OUT);
+  13:../code/APPLICATION/app.c ****     /*init the leds of the cars*/
+  14:../code/APPLICATION/app.c ****     ST_led_t greenCarLed = {PIN_0, PORT_A};
+  15:../code/APPLICATION/app.c ****     ST_led_t yellowCarLed = {PIN_1, PORT_A};
+  16:../code/APPLICATION/app.c ****     ST_led_t redCarLed = {PIN_2, PORT_A};
+  17:../code/APPLICATION/app.c **** 
+  18:../code/APPLICATION/app.c ****     LED_init(greenCarLed);
+  19:../code/APPLICATION/app.c ****     LED_init(yellowCarLed);
+  20:../code/APPLICATION/app.c ****     LED_init(redCarLed);
+  21:../code/APPLICATION/app.c **** 
+  22:../code/APPLICATION/app.c ****     /*init the leds of the men*/
+  23:../code/APPLICATION/app.c ****     ST_led_t greenManLed = {PIN_0, PORT_B};
+  24:../code/APPLICATION/app.c ****     ST_led_t yellowManLed = {PIN_1, PORT_B};
+  25:../code/APPLICATION/app.c ****     ST_led_t redManLed = {PIN_2, PORT_B};
+  26:../code/APPLICATION/app.c **** 
+  27:../code/APPLICATION/app.c ****     LED_init(greenManLed);
+  28:../code/APPLICATION/app.c ****     LED_init(yellowManLed);
+  29:../code/APPLICATION/app.c ****     LED_init(redManLed);
+  30:../code/APPLICATION/app.c **** 
+  31:../code/APPLICATION/app.c ****     /*init the button*/
+  32:../code/APPLICATION/app.c ****     ST_button_t button = {PIN_2, PORT_D};
+  33:../code/APPLICATION/app.c **** 
+  34:../code/APPLICATION/app.c ****     BUTTON_init(button);
+  35:../code/APPLICATION/app.c **** 
+  36:../code/APPLICATION/app.c ****     /*enable the general interrupt*/
+  37:../code/APPLICATION/app.c ****     GIE_enable();
+  38:../code/APPLICATION/app.c **** 
+  39:../code/APPLICATION/app.c ****     /*init the timer*/
+  40:../code/APPLICATION/app.c ****     timer.mode = TIMER0_NORMAL;
+  41:../code/APPLICATION/app.c ****     timer.ocMode = OC0_DISCONNECTED;
+  42:../code/APPLICATION/app.c ****     timer.prescaler = TIMER0_1024_PS;
+  43:../code/APPLICATION/app.c ****     TIMER0_init(&timer);
+  44:../code/APPLICATION/app.c **** 
+  45:../code/APPLICATION/app.c ****     /*enable the overflow interrupt*/
+  46:../code/APPLICATION/app.c ****     TIMER0_OVF_interruptEnable();
+  47:../code/APPLICATION/app.c **** 
+  48:../code/APPLICATION/app.c ****     /*set the calback function of the timer0 interrupt*/
+  49:../code/APPLICATION/app.c ****     TIMER0_OVF_setCallBackFunction(&timerISR);
+  50:../code/APPLICATION/app.c **** 
+  51:../code/APPLICATION/app.c ****     /*init the exti0*/
+  52:../code/APPLICATION/app.c ****     EXTI0_init(EXTI_FALLING_EDGE);
+  53:../code/APPLICATION/app.c **** 
+  54:../code/APPLICATION/app.c ****     /*set the callback function of the exti0*/
+  55:../code/APPLICATION/app.c ****     EXTI0_setCallBack(&ISR);
+  56:../code/APPLICATION/app.c **** 
+  57:../code/APPLICATION/app.c ****     /*---------------------------------------------------
+  58:../code/APPLICATION/app.c ****      *SUPER LOOP CODE
+  59:../code/APPLICATION/app.c ****      *---------------------------------------------------*/
+  60:../code/APPLICATION/app.c ****     while (TRUE)
+  61:../code/APPLICATION/app.c ****     {
+  62:../code/APPLICATION/app.c ****         /*switch the state of the system*/
+  63:../code/APPLICATION/app.c ****         switch (currentState)
+  64:../code/APPLICATION/app.c ****         {
+  65:../code/APPLICATION/app.c ****         case CAR:
+  66:../code/APPLICATION/app.c ****             if (counter < 50) /*in the 5 sec of the state*/
+  67:../code/APPLICATION/app.c ****             {
+  68:../code/APPLICATION/app.c ****                 /* in CAR mode:
+  69:../code/APPLICATION/app.c ****                  *              the car green light is on
+  70:../code/APPLICATION/app.c ****                  *              the man red light is on
+  71:../code/APPLICATION/app.c ****                  *              the other light is off
+  72:../code/APPLICATION/app.c ****                  * */
+  73:../code/APPLICATION/app.c ****                 
+  74:../code/APPLICATION/app.c ****                 LED_on(greenCarLed);
+  75:../code/APPLICATION/app.c ****                 LED_on(redManLed);
+  76:../code/APPLICATION/app.c **** 
+  77:../code/APPLICATION/app.c ****                 LED_off(greenManLed);
+  78:../code/APPLICATION/app.c ****                 LED_off(redCarLed);
+  79:../code/APPLICATION/app.c ****                 LED_off(yellowManLed);
+  80:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+  81:../code/APPLICATION/app.c **** 
+  82:../code/APPLICATION/app.c ****                 /*increment the counter*/
+  83:../code/APPLICATION/app.c ****                 counter++;
+  84:../code/APPLICATION/app.c ****             }
+  85:../code/APPLICATION/app.c ****             else
+  86:../code/APPLICATION/app.c ****             {
+  87:../code/APPLICATION/app.c ****                 currentState = YELLOW_CAR;
+  88:../code/APPLICATION/app.c ****                 counter = 0;
+  89:../code/APPLICATION/app.c ****             }
+  90:../code/APPLICATION/app.c ****             break;
+  91:../code/APPLICATION/app.c ****         case YELLOW_CAR:
+  92:../code/APPLICATION/app.c ****             if (counter < 50) /*in the 5 sec of the state*/
+  93:../code/APPLICATION/app.c ****             {
+  94:../code/APPLICATION/app.c ****                 /* in YELLOW_CAR mode:
+  95:../code/APPLICATION/app.c ****                  *              the car yellow light is on and toggle
+  96:../code/APPLICATION/app.c ****                  *              the man red light is on
+  97:../code/APPLICATION/app.c ****                  *              the other light is off
+  98:../code/APPLICATION/app.c ****                  * */
+  99:../code/APPLICATION/app.c ****                 
+ 100:../code/APPLICATION/app.c ****                 LED_on(redManLed);
+ 101:../code/APPLICATION/app.c **** 
+ 102:../code/APPLICATION/app.c ****                 LED_off(redCarLed);
+ 103:../code/APPLICATION/app.c **** 
+ 104:../code/APPLICATION/app.c ****                 LED_off(greenCarLed);
+ 105:../code/APPLICATION/app.c ****                 LED_off(greenManLed);
+ 106:../code/APPLICATION/app.c **** 
+ 107:../code/APPLICATION/app.c ****                 LED_off(yellowManLed);
+ 108:../code/APPLICATION/app.c ****                 if ((counter % 5) == 0) /*toggling every 0.5 sec*/
+ 109:../code/APPLICATION/app.c ****                 {
+ 110:../code/APPLICATION/app.c ****                     /*toggle the yellow of the car*/
+ 111:../code/APPLICATION/app.c ****                     LED_toggle(yellowCarLed);
+ 112:../code/APPLICATION/app.c ****                 }
+ 113:../code/APPLICATION/app.c **** 
+ 114:../code/APPLICATION/app.c ****                 /*increment the counter*/
+ 115:../code/APPLICATION/app.c ****                 counter++;
+ 116:../code/APPLICATION/app.c ****             }
+ 117:../code/APPLICATION/app.c ****             else
+ 118:../code/APPLICATION/app.c ****             {
+ 119:../code/APPLICATION/app.c ****                 /*change the state to the next*/
+ 120:../code/APPLICATION/app.c ****                 currentState = MAN;
+ 121:../code/APPLICATION/app.c **** 
+ 122:../code/APPLICATION/app.c ****                 /*reset the counter*/
+ 123:../code/APPLICATION/app.c ****                 counter = 0;
+ 124:../code/APPLICATION/app.c ****             }
+ 125:../code/APPLICATION/app.c ****             break;
+ 126:../code/APPLICATION/app.c ****         case MAN:
+ 127:../code/APPLICATION/app.c ****             if (counter < 50) /*in the 5 sec of the state*/
+ 128:../code/APPLICATION/app.c ****             {
+ 129:../code/APPLICATION/app.c ****                 /* in MAN mode:
+ 130:../code/APPLICATION/app.c ****                  *              the car red light is on
+ 131:../code/APPLICATION/app.c ****                  *              the man green light is on
+ 132:../code/APPLICATION/app.c ****                  *              the other light is off
+ 133:../code/APPLICATION/app.c ****                  * */
+ 134:../code/APPLICATION/app.c **** 
+ 135:../code/APPLICATION/app.c ****                 LED_on(greenManLed);
+ 136:../code/APPLICATION/app.c ****                 LED_on(redCarLed);
+ 137:../code/APPLICATION/app.c **** 
+ 138:../code/APPLICATION/app.c ****                 LED_off(greenCarLed);
+ 139:../code/APPLICATION/app.c ****                 LED_off(redManLed);
+ 140:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+ 141:../code/APPLICATION/app.c ****                 LED_off(yellowManLed);
+ 142:../code/APPLICATION/app.c ****                 /*increment the counter*/
+ 143:../code/APPLICATION/app.c ****                 counter++;
+ 144:../code/APPLICATION/app.c ****             }
+ 145:../code/APPLICATION/app.c ****             else
+ 146:../code/APPLICATION/app.c ****             {
+ 147:../code/APPLICATION/app.c ****                 /*change the state to the next*/
+ 148:../code/APPLICATION/app.c ****                 currentState = YELLOW_MAN;
+ 149:../code/APPLICATION/app.c **** 
+ 150:../code/APPLICATION/app.c ****                 /*reset the counter*/
+ 151:../code/APPLICATION/app.c ****                 counter = 0;
+ 152:../code/APPLICATION/app.c ****             }
+ 153:../code/APPLICATION/app.c ****             break;
+ 154:../code/APPLICATION/app.c ****         case YELLOW_MAN:
+ 155:../code/APPLICATION/app.c ****             if (counter < 50) /*in the 5 sec of the state*/
+ 156:../code/APPLICATION/app.c ****             {
+ 157:../code/APPLICATION/app.c ****                 /* in YELLOW_MAN mode:
+ 158:../code/APPLICATION/app.c ****                  *              the man yellow light is on and toggle
+ 159:../code/APPLICATION/app.c ****                  *              the car red light is on
+ 160:../code/APPLICATION/app.c ****                  *              the other light is off
+ 161:../code/APPLICATION/app.c ****                  * */
+ 162:../code/APPLICATION/app.c ****                 LED_on(redCarLed);
+ 163:../code/APPLICATION/app.c **** 
+ 164:../code/APPLICATION/app.c ****                 LED_off(redManLed);
+ 165:../code/APPLICATION/app.c ****                 LED_off(greenCarLed);
+ 166:../code/APPLICATION/app.c ****                 LED_off(greenManLed);
+ 167:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+ 168:../code/APPLICATION/app.c ****                 if ((counter % 5) == 0) /*toggling every 0.5 sec*/
+ 169:../code/APPLICATION/app.c ****                 {
+ 170:../code/APPLICATION/app.c ****                     /*toggle the yellow of the man*/
+ 171:../code/APPLICATION/app.c ****                     LED_toggle(yellowManLed);
+ 172:../code/APPLICATION/app.c ****                 }
+ 173:../code/APPLICATION/app.c ****                 
+ 174:../code/APPLICATION/app.c ****                 /*increment the counter*/
+ 175:../code/APPLICATION/app.c ****                 counter++;
+ 176:../code/APPLICATION/app.c ****             }
+ 177:../code/APPLICATION/app.c ****             else
+ 178:../code/APPLICATION/app.c ****             {
+ 179:../code/APPLICATION/app.c ****                 /*change the state to the next*/
+ 180:../code/APPLICATION/app.c ****                 currentState = CAR;
+ 181:../code/APPLICATION/app.c **** 
+ 182:../code/APPLICATION/app.c ****                 /*reset the counter*/
+ 183:../code/APPLICATION/app.c ****                 counter = 0;
+ 184:../code/APPLICATION/app.c ****             }
+ 185:../code/APPLICATION/app.c ****             break;
+ 186:../code/APPLICATION/app.c **** 
+ 187:../code/APPLICATION/app.c ****         default:
+ 188:../code/APPLICATION/app.c ****             break;
+ 189:../code/APPLICATION/app.c ****         }
+ 190:../code/APPLICATION/app.c **** 
+ 191:../code/APPLICATION/app.c ****         /*wait to 1/10 of the sec*/
+ 192:../code/APPLICATION/app.c ****         delayOneTenthSec(&timer);
+ 193:../code/APPLICATION/app.c ****     }
+ 194:../code/APPLICATION/app.c **** }
+ 195:../code/APPLICATION/app.c **** 
+ 196:../code/APPLICATION/app.c **** void delayOneTenthSec(ST_timer0_t *ptr_timer0)
+ 197:../code/APPLICATION/app.c **** {
+ 198:../code/APPLICATION/app.c ****     uint8_t flag = TRUE;
+ 199:../code/APPLICATION/app.c ****     uint8_t nothing = 0;
+ 200:../code/APPLICATION/app.c **** 
+ 201:../code/APPLICATION/app.c ****     /*start the timer*/
+ 202:../code/APPLICATION/app.c ****     TIMER0_start(ptr_timer0);
+ 203:../code/APPLICATION/app.c ****     /*wait until the number of overflows*/
+ 204:../code/APPLICATION/app.c ****     while (flag)
+ 205:../code/APPLICATION/app.c ****     {
+ 206:../code/APPLICATION/app.c ****         TIMER0_getTimerValue(&nothing);
+ 207:../code/APPLICATION/app.c ****         switch (timerCounter)
+ 208:../code/APPLICATION/app.c ****         {
+ 209:../code/APPLICATION/app.c ****         case 3:
+ 210:../code/APPLICATION/app.c **** 
+ 211:../code/APPLICATION/app.c ****             flag = FALSE;
+ 212:../code/APPLICATION/app.c ****             break;
+ 213:../code/APPLICATION/app.c ****         default:
+ 214:../code/APPLICATION/app.c ****             break;
+ 215:../code/APPLICATION/app.c ****         }
+ 216:../code/APPLICATION/app.c ****     }
+ 217:../code/APPLICATION/app.c **** 
+ 218:../code/APPLICATION/app.c ****     /*reset the overflow counter*/
+ 219:../code/APPLICATION/app.c ****     timerCounter = 0;
+ 220:../code/APPLICATION/app.c **** 
+ 221:../code/APPLICATION/app.c ****     /*stop the timer*/
+ 222:../code/APPLICATION/app.c ****     TIMER0_stop();
+ 223:../code/APPLICATION/app.c **** }
+ 224:../code/APPLICATION/app.c **** 
+ 225:../code/APPLICATION/app.c **** void ISR(void)
+ 226:../code/APPLICATION/app.c **** {
+  15               		.loc 1 226 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+ 227:../code/APPLICATION/app.c ****     /*switch over the current state of the system*/
+ 228:../code/APPLICATION/app.c ****     switch (currentState)
+  21               		.loc 1 228 0
+  22 0000 8091 0000 		lds r24,currentState
+  23 0004 8111      		cpse r24,__zero_reg__
+  24 0006 00C0      		rjmp .L1
+ 229:../code/APPLICATION/app.c ****     {
+ 230:../code/APPLICATION/app.c ****     case CAR: /*in CAR state change the state to YELLOW_CAR and make the counter 0*/
+ 231:../code/APPLICATION/app.c ****         currentState = YELLOW_CAR;
+  25               		.loc 1 231 0
+  26 0008 81E0      		ldi r24,lo8(1)
+  27 000a 8093 0000 		sts currentState,r24
+ 232:../code/APPLICATION/app.c ****         counter = 0;
+  28               		.loc 1 232 0
+  29 000e 1092 0000 		sts counter,__zero_reg__
+  30               	.L1:
+  31 0012 0895      		ret
+  32               		.cfi_endproc
+  33               	.LFE2:
+  35               	.global	timerISR
+  37               	timerISR:
+  38               	.LFB3:
+ 233:../code/APPLICATION/app.c ****         break;
+ 234:../code/APPLICATION/app.c ****     case YELLOW_CAR: /*in YELLOW_CAR state*/
+ 235:../code/APPLICATION/app.c ****         /* code */
+ 236:../code/APPLICATION/app.c ****         break;
+ 237:../code/APPLICATION/app.c ****     case MAN: /*in MAN state*/
+ 238:../code/APPLICATION/app.c ****         /* code */
+ 239:../code/APPLICATION/app.c ****         break;
+ 240:../code/APPLICATION/app.c ****     case YELLOW_MAN: /*in YELLOW_MAN*/
+ 241:../code/APPLICATION/app.c ****         /* code */
+ 242:../code/APPLICATION/app.c ****         break;
+ 243:../code/APPLICATION/app.c **** 
+ 244:../code/APPLICATION/app.c ****     default:
+ 245:../code/APPLICATION/app.c ****         break;
+ 246:../code/APPLICATION/app.c ****     }
+ 247:../code/APPLICATION/app.c **** }
+ 248:../code/APPLICATION/app.c **** 
+ 249:../code/APPLICATION/app.c **** void timerISR(void)
+ 250:../code/APPLICATION/app.c **** {
+  39               		.loc 1 250 0
+  40               		.cfi_startproc
+  41               	/* prologue: function */
+  42               	/* frame size = 0 */
+  43               	/* stack size = 0 */
+  44               	.L__stack_usage = 0
+ 251:../code/APPLICATION/app.c ****     /*increment the counter that indicates the overflows number*/
+ 252:../code/APPLICATION/app.c ****     timerCounter++;
+  45               		.loc 1 252 0
+  46 0014 8091 0000 		lds r24,timerCounter
+  47 0018 8F5F      		subi r24,lo8(-(1))
+  48 001a 8093 0000 		sts timerCounter,r24
+  49 001e 0895      		ret
+  50               		.cfi_endproc
+  51               	.LFE3:
+  53               	.global	delayOneTenthSec
+  55               	delayOneTenthSec:
+  56               	.LFB1:
+ 197:../code/APPLICATION/app.c ****     uint8_t flag = TRUE;
+  57               		.loc 1 197 0
+  58               		.cfi_startproc
+  59               	.LVL0:
+  60 0020 CF93      		push r28
+  61               	.LCFI0:
+  62               		.cfi_def_cfa_offset 3
+  63               		.cfi_offset 28, -2
+  64 0022 DF93      		push r29
+  65               	.LCFI1:
+  66               		.cfi_def_cfa_offset 4
+  67               		.cfi_offset 29, -3
+  68 0024 1F92      		push __zero_reg__
+  69               	.LCFI2:
+  70               		.cfi_def_cfa_offset 5
+  71 0026 CDB7      		in r28,__SP_L__
+  72 0028 DEB7      		in r29,__SP_H__
+  73               	.LCFI3:
+  74               		.cfi_def_cfa_register 28
+  75               	/* prologue: function */
+  76               	/* frame size = 1 */
+  77               	/* stack size = 3 */
+  78               	.L__stack_usage = 3
+  79               	.LVL1:
+ 199:../code/APPLICATION/app.c **** 
+  80               		.loc 1 199 0
+  81 002a 1982      		std Y+1,__zero_reg__
+ 202:../code/APPLICATION/app.c ****     /*wait until the number of overflows*/
+  82               		.loc 1 202 0
+  83 002c 0E94 0000 		call TIMER0_start
+  84               	.LVL2:
+  85               	.L7:
+ 206:../code/APPLICATION/app.c ****         switch (timerCounter)
+  86               		.loc 1 206 0
+  87 0030 CE01      		movw r24,r28
+  88 0032 0196      		adiw r24,1
+  89 0034 0E94 0000 		call TIMER0_getTimerValue
+  90               	.LVL3:
+ 207:../code/APPLICATION/app.c ****         {
+  91               		.loc 1 207 0
+  92 0038 8091 0000 		lds r24,timerCounter
+  93 003c 8330      		cpi r24,lo8(3)
+  94 003e 01F4      		brne .L7
+  95               	.LVL4:
+ 219:../code/APPLICATION/app.c **** 
+  96               		.loc 1 219 0
+  97 0040 1092 0000 		sts timerCounter,__zero_reg__
+ 222:../code/APPLICATION/app.c **** }
+  98               		.loc 1 222 0
+  99 0044 0E94 0000 		call TIMER0_stop
+ 100               	.LVL5:
+ 101               	/* epilogue start */
+ 223:../code/APPLICATION/app.c **** 
+ 102               		.loc 1 223 0
+ 103 0048 0F90      		pop __tmp_reg__
+ 104 004a DF91      		pop r29
+ 105 004c CF91      		pop r28
+ 106 004e 0895      		ret
+ 107               		.cfi_endproc
+ 108               	.LFE1:
+ 110               	.global	APP_start
+ 112               	APP_start:
+ 113               	.LFB0:
+   8:../code/APPLICATION/app.c ****     /*---------------------------------------------------
+ 114               		.loc 1 8 0
+ 115               		.cfi_startproc
+ 116               	/* prologue: function */
+ 117               	/* frame size = 0 */
+ 118               	/* stack size = 0 */
+ 119               	.L__stack_usage = 0
+  12:../code/APPLICATION/app.c ****     /*init the leds of the cars*/
+ 120               		.loc 1 12 0
+ 121 0050 41E0      		ldi r20,lo8(1)
+ 122 0052 63E4      		ldi r22,lo8(67)
+ 123 0054 80E0      		ldi r24,0
+ 124 0056 0E94 0000 		call GPIO_initPin
+ 125               	.LVL6:
+  18:../code/APPLICATION/app.c ****     LED_init(yellowCarLed);
+ 126               		.loc 1 18 0
+ 127 005a 80E0      		ldi r24,0
+ 128 005c 91E4      		ldi r25,lo8(65)
+ 129 005e 0E94 0000 		call LED_init
+ 130               	.LVL7:
+  19:../code/APPLICATION/app.c ****     LED_init(redCarLed);
+ 131               		.loc 1 19 0
+ 132 0062 81E0      		ldi r24,lo8(1)
+ 133 0064 91E4      		ldi r25,lo8(65)
+ 134 0066 0E94 0000 		call LED_init
+ 135               	.LVL8:
+  20:../code/APPLICATION/app.c **** 
+ 136               		.loc 1 20 0
+ 137 006a 82E0      		ldi r24,lo8(2)
+ 138 006c 91E4      		ldi r25,lo8(65)
+ 139 006e 0E94 0000 		call LED_init
+ 140               	.LVL9:
+  27:../code/APPLICATION/app.c ****     LED_init(yellowManLed);
+ 141               		.loc 1 27 0
+ 142 0072 80E0      		ldi r24,0
+ 143 0074 92E4      		ldi r25,lo8(66)
+ 144 0076 0E94 0000 		call LED_init
+ 145               	.LVL10:
+  28:../code/APPLICATION/app.c ****     LED_init(redManLed);
+ 146               		.loc 1 28 0
+ 147 007a 81E0      		ldi r24,lo8(1)
+ 148 007c 92E4      		ldi r25,lo8(66)
+ 149 007e 0E94 0000 		call LED_init
+ 150               	.LVL11:
+  29:../code/APPLICATION/app.c **** 
+ 151               		.loc 1 29 0
+ 152 0082 82E0      		ldi r24,lo8(2)
+ 153 0084 92E4      		ldi r25,lo8(66)
+ 154 0086 0E94 0000 		call LED_init
+ 155               	.LVL12:
+  34:../code/APPLICATION/app.c **** 
+ 156               		.loc 1 34 0
+ 157 008a 62E0      		ldi r22,lo8(2)
+ 158 008c 74E4      		ldi r23,lo8(68)
+ 159 008e 80E0      		ldi r24,0
+ 160 0090 0E94 0000 		call BUTTON_init
+ 161               	.LVL13:
+  37:../code/APPLICATION/app.c **** 
+ 162               		.loc 1 37 0
+ 163 0094 0E94 0000 		call GIE_enable
+ 164               	.LVL14:
+  40:../code/APPLICATION/app.c ****     timer.ocMode = OC0_DISCONNECTED;
+ 165               		.loc 1 40 0
+ 166 0098 1092 0000 		sts timer,__zero_reg__
+  41:../code/APPLICATION/app.c ****     timer.prescaler = TIMER0_1024_PS;
+ 167               		.loc 1 41 0
+ 168 009c 1092 0000 		sts timer+2,__zero_reg__
+  42:../code/APPLICATION/app.c ****     TIMER0_init(&timer);
+ 169               		.loc 1 42 0
+ 170 00a0 85E0      		ldi r24,lo8(5)
+ 171 00a2 8093 0000 		sts timer+1,r24
+  43:../code/APPLICATION/app.c **** 
+ 172               		.loc 1 43 0
+ 173 00a6 80E0      		ldi r24,lo8(timer)
+ 174 00a8 90E0      		ldi r25,hi8(timer)
+ 175 00aa 0E94 0000 		call TIMER0_init
+ 176               	.LVL15:
+  46:../code/APPLICATION/app.c **** 
+ 177               		.loc 1 46 0
+ 178 00ae 0E94 0000 		call TIMER0_OVF_interruptEnable
+ 179               	.LVL16:
+  49:../code/APPLICATION/app.c **** 
+ 180               		.loc 1 49 0
+ 181 00b2 80E0      		ldi r24,lo8(gs(timerISR))
+ 182 00b4 90E0      		ldi r25,hi8(gs(timerISR))
+ 183 00b6 0E94 0000 		call TIMER0_OVF_setCallBackFunction
+ 184               	.LVL17:
+  52:../code/APPLICATION/app.c **** 
+ 185               		.loc 1 52 0
+ 186 00ba 81E0      		ldi r24,lo8(1)
+ 187 00bc 0E94 0000 		call EXTI0_init
+ 188               	.LVL18:
+  55:../code/APPLICATION/app.c **** 
+ 189               		.loc 1 55 0
+ 190 00c0 80E0      		ldi r24,lo8(gs(ISR))
+ 191 00c2 90E0      		ldi r25,hi8(gs(ISR))
+ 192 00c4 0E94 0000 		call EXTI0_setCallBack
+ 193               	.LVL19:
+ 120:../code/APPLICATION/app.c **** 
+ 194               		.loc 1 120 0
+ 195 00c8 D2E0      		ldi r29,lo8(2)
+ 108:../code/APPLICATION/app.c ****                 {
+ 196               		.loc 1 108 0
+ 197 00ca C5E0      		ldi r28,lo8(5)
+ 148:../code/APPLICATION/app.c **** 
+ 198               		.loc 1 148 0
+ 199 00cc 13E0      		ldi r17,lo8(3)
+ 200               	.L21:
+  63:../code/APPLICATION/app.c ****         {
+ 201               		.loc 1 63 0
+ 202 00ce 8091 0000 		lds r24,currentState
+ 203 00d2 8130      		cpi r24,lo8(1)
+ 204 00d4 01F0      		breq .L11
+ 205 00d6 00F0      		brlo .L12
+ 206 00d8 8230      		cpi r24,lo8(2)
+ 207 00da 01F4      		brne .+2
+ 208 00dc 00C0      		rjmp .L13
+ 209 00de 8330      		cpi r24,lo8(3)
+ 210 00e0 01F4      		brne .+2
+ 211 00e2 00C0      		rjmp .L14
+ 212 00e4 00C0      		rjmp .L10
+ 213               	.L12:
+  66:../code/APPLICATION/app.c ****             {
+ 214               		.loc 1 66 0
+ 215 00e6 8091 0000 		lds r24,counter
+ 216 00ea 8233      		cpi r24,lo8(50)
+ 217 00ec 00F4      		brsh .L15
+  74:../code/APPLICATION/app.c ****                 LED_on(redManLed);
+ 218               		.loc 1 74 0
+ 219 00ee 80E0      		ldi r24,0
+ 220 00f0 91E4      		ldi r25,lo8(65)
+ 221 00f2 0E94 0000 		call LED_on
+ 222               	.LVL20:
+  75:../code/APPLICATION/app.c **** 
+ 223               		.loc 1 75 0
+ 224 00f6 82E0      		ldi r24,lo8(2)
+ 225 00f8 92E4      		ldi r25,lo8(66)
+ 226 00fa 0E94 0000 		call LED_on
+ 227               	.LVL21:
+  77:../code/APPLICATION/app.c ****                 LED_off(redCarLed);
+ 228               		.loc 1 77 0
+ 229 00fe 80E0      		ldi r24,0
+ 230 0100 92E4      		ldi r25,lo8(66)
+ 231 0102 0E94 0000 		call LED_off
+ 232               	.LVL22:
+  78:../code/APPLICATION/app.c ****                 LED_off(yellowManLed);
+ 233               		.loc 1 78 0
+ 234 0106 82E0      		ldi r24,lo8(2)
+ 235 0108 91E4      		ldi r25,lo8(65)
+ 236 010a 0E94 0000 		call LED_off
+ 237               	.LVL23:
+  79:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+ 238               		.loc 1 79 0
+ 239 010e 81E0      		ldi r24,lo8(1)
+ 240 0110 92E4      		ldi r25,lo8(66)
+ 241 0112 0E94 0000 		call LED_off
+ 242               	.LVL24:
+  80:../code/APPLICATION/app.c **** 
+ 243               		.loc 1 80 0
+ 244 0116 81E0      		ldi r24,lo8(1)
+ 245 0118 91E4      		ldi r25,lo8(65)
+ 246 011a 00C0      		rjmp .L24
+ 247               	.L15:
+  87:../code/APPLICATION/app.c ****                 counter = 0;
+ 248               		.loc 1 87 0
+ 249 011c 81E0      		ldi r24,lo8(1)
+ 250 011e 8093 0000 		sts currentState,r24
+ 251 0122 00C0      		rjmp .L22
+ 252               	.L11:
+  92:../code/APPLICATION/app.c ****             {
+ 253               		.loc 1 92 0
+ 254 0124 8091 0000 		lds r24,counter
+ 255 0128 8233      		cpi r24,lo8(50)
+ 256 012a 00F4      		brsh .L16
+ 100:../code/APPLICATION/app.c **** 
+ 257               		.loc 1 100 0
+ 258 012c 82E0      		ldi r24,lo8(2)
+ 259 012e 92E4      		ldi r25,lo8(66)
+ 260 0130 0E94 0000 		call LED_on
+ 261               	.LVL25:
+ 102:../code/APPLICATION/app.c **** 
+ 262               		.loc 1 102 0
+ 263 0134 82E0      		ldi r24,lo8(2)
+ 264 0136 91E4      		ldi r25,lo8(65)
+ 265 0138 0E94 0000 		call LED_off
+ 266               	.LVL26:
+ 104:../code/APPLICATION/app.c ****                 LED_off(greenManLed);
+ 267               		.loc 1 104 0
+ 268 013c 80E0      		ldi r24,0
+ 269 013e 91E4      		ldi r25,lo8(65)
+ 270 0140 0E94 0000 		call LED_off
+ 271               	.LVL27:
+ 105:../code/APPLICATION/app.c **** 
+ 272               		.loc 1 105 0
+ 273 0144 80E0      		ldi r24,0
+ 274 0146 92E4      		ldi r25,lo8(66)
+ 275 0148 0E94 0000 		call LED_off
+ 276               	.LVL28:
+ 107:../code/APPLICATION/app.c ****                 if ((counter % 5) == 0) /*toggling every 0.5 sec*/
+ 277               		.loc 1 107 0
+ 278 014c 81E0      		ldi r24,lo8(1)
+ 279 014e 92E4      		ldi r25,lo8(66)
+ 280 0150 0E94 0000 		call LED_off
+ 281               	.LVL29:
+ 108:../code/APPLICATION/app.c ****                 {
+ 282               		.loc 1 108 0
+ 283 0154 8091 0000 		lds r24,counter
+ 284 0158 6C2F      		mov r22,r28
+ 285 015a 0E94 0000 		call __udivmodqi4
+ 286 015e 9111      		cpse r25,__zero_reg__
+ 287 0160 00C0      		rjmp .L20
+ 111:../code/APPLICATION/app.c ****                 }
+ 288               		.loc 1 111 0
+ 289 0162 81E0      		ldi r24,lo8(1)
+ 290 0164 91E4      		ldi r25,lo8(65)
+ 291 0166 00C0      		rjmp .L23
+ 292               	.L16:
+ 120:../code/APPLICATION/app.c **** 
+ 293               		.loc 1 120 0
+ 294 0168 D093 0000 		sts currentState,r29
+ 295 016c 00C0      		rjmp .L22
+ 296               	.L13:
+ 127:../code/APPLICATION/app.c ****             {
+ 297               		.loc 1 127 0
+ 298 016e 8091 0000 		lds r24,counter
+ 299 0172 8233      		cpi r24,lo8(50)
+ 300 0174 00F4      		brsh .L18
+ 135:../code/APPLICATION/app.c ****                 LED_on(redCarLed);
+ 301               		.loc 1 135 0
+ 302 0176 80E0      		ldi r24,0
+ 303 0178 92E4      		ldi r25,lo8(66)
+ 304 017a 0E94 0000 		call LED_on
+ 305               	.LVL30:
+ 136:../code/APPLICATION/app.c **** 
+ 306               		.loc 1 136 0
+ 307 017e 82E0      		ldi r24,lo8(2)
+ 308 0180 91E4      		ldi r25,lo8(65)
+ 309 0182 0E94 0000 		call LED_on
+ 310               	.LVL31:
+ 138:../code/APPLICATION/app.c ****                 LED_off(redManLed);
+ 311               		.loc 1 138 0
+ 312 0186 80E0      		ldi r24,0
+ 313 0188 91E4      		ldi r25,lo8(65)
+ 314 018a 0E94 0000 		call LED_off
+ 315               	.LVL32:
+ 139:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+ 316               		.loc 1 139 0
+ 317 018e 82E0      		ldi r24,lo8(2)
+ 318 0190 92E4      		ldi r25,lo8(66)
+ 319 0192 0E94 0000 		call LED_off
+ 320               	.LVL33:
+ 140:../code/APPLICATION/app.c ****                 LED_off(yellowManLed);
+ 321               		.loc 1 140 0
+ 322 0196 81E0      		ldi r24,lo8(1)
+ 323 0198 91E4      		ldi r25,lo8(65)
+ 324 019a 0E94 0000 		call LED_off
+ 325               	.LVL34:
+ 141:../code/APPLICATION/app.c ****                 /*increment the counter*/
+ 326               		.loc 1 141 0
+ 327 019e 81E0      		ldi r24,lo8(1)
+ 328 01a0 92E4      		ldi r25,lo8(66)
+ 329               	.L24:
+ 330 01a2 0E94 0000 		call LED_off
+ 331               	.LVL35:
+ 332 01a6 00C0      		rjmp .L20
+ 333               	.L18:
+ 148:../code/APPLICATION/app.c **** 
+ 334               		.loc 1 148 0
+ 335 01a8 1093 0000 		sts currentState,r17
+ 336 01ac 00C0      		rjmp .L22
+ 337               	.L14:
+ 155:../code/APPLICATION/app.c ****             {
+ 338               		.loc 1 155 0
+ 339 01ae 8091 0000 		lds r24,counter
+ 340 01b2 8233      		cpi r24,lo8(50)
+ 341 01b4 00F4      		brsh .L19
+ 162:../code/APPLICATION/app.c **** 
+ 342               		.loc 1 162 0
+ 343 01b6 82E0      		ldi r24,lo8(2)
+ 344 01b8 91E4      		ldi r25,lo8(65)
+ 345 01ba 0E94 0000 		call LED_on
+ 346               	.LVL36:
+ 164:../code/APPLICATION/app.c ****                 LED_off(greenCarLed);
+ 347               		.loc 1 164 0
+ 348 01be 82E0      		ldi r24,lo8(2)
+ 349 01c0 92E4      		ldi r25,lo8(66)
+ 350 01c2 0E94 0000 		call LED_off
+ 351               	.LVL37:
+ 165:../code/APPLICATION/app.c ****                 LED_off(greenManLed);
+ 352               		.loc 1 165 0
+ 353 01c6 80E0      		ldi r24,0
+ 354 01c8 91E4      		ldi r25,lo8(65)
+ 355 01ca 0E94 0000 		call LED_off
+ 356               	.LVL38:
+ 166:../code/APPLICATION/app.c ****                 LED_off(yellowCarLed);
+ 357               		.loc 1 166 0
+ 358 01ce 80E0      		ldi r24,0
+ 359 01d0 92E4      		ldi r25,lo8(66)
+ 360 01d2 0E94 0000 		call LED_off
+ 361               	.LVL39:
+ 167:../code/APPLICATION/app.c ****                 if ((counter % 5) == 0) /*toggling every 0.5 sec*/
+ 362               		.loc 1 167 0
+ 363 01d6 81E0      		ldi r24,lo8(1)
+ 364 01d8 91E4      		ldi r25,lo8(65)
+ 365 01da 0E94 0000 		call LED_off
+ 366               	.LVL40:
+ 168:../code/APPLICATION/app.c ****                 {
+ 367               		.loc 1 168 0
+ 368 01de 8091 0000 		lds r24,counter
+ 369 01e2 6C2F      		mov r22,r28
+ 370 01e4 0E94 0000 		call __udivmodqi4
+ 371 01e8 9111      		cpse r25,__zero_reg__
+ 372 01ea 00C0      		rjmp .L20
+ 171:../code/APPLICATION/app.c ****                 }
+ 373               		.loc 1 171 0
+ 374 01ec 81E0      		ldi r24,lo8(1)
+ 375 01ee 92E4      		ldi r25,lo8(66)
+ 376               	.L23:
+ 377 01f0 0E94 0000 		call LED_toggle
+ 378               	.LVL41:
+ 379               	.L20:
+ 175:../code/APPLICATION/app.c ****             }
+ 380               		.loc 1 175 0
+ 381 01f4 8091 0000 		lds r24,counter
+ 382 01f8 8F5F      		subi r24,lo8(-(1))
+ 383 01fa 8093 0000 		sts counter,r24
+ 384 01fe 00C0      		rjmp .L10
+ 385               	.L19:
+ 180:../code/APPLICATION/app.c **** 
+ 386               		.loc 1 180 0
+ 387 0200 1092 0000 		sts currentState,__zero_reg__
+ 388               	.L22:
+ 183:../code/APPLICATION/app.c ****             }
+ 389               		.loc 1 183 0
+ 390 0204 1092 0000 		sts counter,__zero_reg__
+ 391               	.L10:
+ 192:../code/APPLICATION/app.c ****     }
+ 392               		.loc 1 192 0
+ 393 0208 80E0      		ldi r24,lo8(timer)
+ 394 020a 90E0      		ldi r25,hi8(timer)
+ 395 020c 0E94 0000 		call delayOneTenthSec
+ 396               	.LVL42:
+ 193:../code/APPLICATION/app.c **** }
+ 397               		.loc 1 193 0
+ 398 0210 00C0      		rjmp .L21
+ 399               		.cfi_endproc
+ 400               	.LFE0:
+ 402               		.comm	timer,3,1
+ 403               	.global	timerCounter
+ 404               		.section .bss
+ 407               	timerCounter:
+ 408 0000 00        		.zero	1
+ 409               	.global	counter
+ 412               	counter:
+ 413 0001 00        		.zero	1
+ 414               	.global	currentState
+ 417               	currentState:
+ 418 0002 00        		.zero	1
+ 419               		.text
+ 420               	.Letext0:
+ 421               		.file 2 "../code/APPLICATION/../UTALITIES/types.h"
+ 422               		.file 3 "../code/APPLICATION/../MCAL/TIMER/timer.h"
+ 423               		.file 4 "../code/APPLICATION/../MCAL/EXTI/exti.h"
+ 424               		.file 5 "../code/APPLICATION/../ECUAL/BUTTON/../../MCAL/GPIO/gpio.h"
+ 425               		.file 6 "../code/APPLICATION/../ECUAL/BUTTON/button.h"
+ 426               		.file 7 "../code/APPLICATION/../ECUAL/LED/led.h"
+ 427               		.file 8 "../code/APPLICATION/app.h"
+ 428               		.file 9 "../code/APPLICATION/../MCAL/GIE/gie.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 app.c
+     /tmp/ccQ4pKpq.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccQ4pKpq.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccQ4pKpq.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccQ4pKpq.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccQ4pKpq.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccQ4pKpq.s:12     .text:0000000000000000 ISR
+     /tmp/ccQ4pKpq.s:417    .bss:0000000000000002 currentState
+     /tmp/ccQ4pKpq.s:412    .bss:0000000000000001 counter
+     /tmp/ccQ4pKpq.s:37     .text:0000000000000014 timerISR
+     /tmp/ccQ4pKpq.s:407    .bss:0000000000000000 timerCounter
+     /tmp/ccQ4pKpq.s:55     .text:0000000000000020 delayOneTenthSec
+     /tmp/ccQ4pKpq.s:112    .text:0000000000000050 APP_start
+                            *COM*:0000000000000003 timer
+
+UNDEFINED SYMBOLS
+TIMER0_start
+TIMER0_getTimerValue
+TIMER0_stop
+GPIO_initPin
+LED_init
+BUTTON_init
+GIE_enable
+TIMER0_init
+TIMER0_OVF_interruptEnable
+TIMER0_OVF_setCallBackFunction
+EXTI0_init
+EXTI0_setCallBack
+LED_on
+LED_off
+__udivmodqi4
+LED_toggle
+__do_clear_bss

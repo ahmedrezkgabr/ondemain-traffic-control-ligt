@@ -1,0 +1,737 @@
+   1               		.file	"exti.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	EXTI0_init
+  12               	EXTI0_init:
+  13               	.LFB0:
+  14               		.file 1 "../code/MCAL/EXTI/exti.c"
+   1:../code/MCAL/EXTI/exti.c **** #include "../../UTALITIES/register.h" /*included here to be not accessable to the uper layers*/
+   2:../code/MCAL/EXTI/exti.c **** #include "../../UTALITIES/bit.h"      /*included here to be not accessable to the uper layers*/
+   3:../code/MCAL/EXTI/exti.c **** 
+   4:../code/MCAL/EXTI/exti.c **** #include "exti.h"
+   5:../code/MCAL/EXTI/exti.c **** 
+   6:../code/MCAL/EXTI/exti.c **** void (*EXTI0_func)(void) = NULL; /*call back function of exti 0*/
+   7:../code/MCAL/EXTI/exti.c **** void (*EXTI1_func)(void) = NULL; /*call back function of exti 1*/
+   8:../code/MCAL/EXTI/exti.c **** void (*EXTI2_func)(void) = NULL; /*call back function of exti 2*/
+   9:../code/MCAL/EXTI/exti.c **** 
+  10:../code/MCAL/EXTI/exti.c **** /*from interrupt vectors table in the datasheet*/
+  11:../code/MCAL/EXTI/exti.c **** void __vector_1(void) __attribute__((signal)); /*external interrupt 0*/
+  12:../code/MCAL/EXTI/exti.c **** void __vector_2(void) __attribute__((signal)); /*external interrupt 0*/
+  13:../code/MCAL/EXTI/exti.c **** void __vector_3(void) __attribute__((signal)); /*external interrupt 0*/
+  14:../code/MCAL/EXTI/exti.c **** 
+  15:../code/MCAL/EXTI/exti.c **** EN_extiError_t EXTI0_init(EN_senseControl_t senseControl)
+  16:../code/MCAL/EXTI/exti.c **** {
+  15               		.loc 1 16 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  17:../code/MCAL/EXTI/exti.c ****     EN_extiError_t ret = EXTI_OK;
+  18:../code/MCAL/EXTI/exti.c **** 
+  19:../code/MCAL/EXTI/exti.c ****     /*switch over sense control*/
+  20:../code/MCAL/EXTI/exti.c ****     switch (senseControl)
+  22               		.loc 1 20 0
+  23 0000 8130      		cpi r24,lo8(1)
+  24 0002 01F0      		breq .L3
+  25 0004 00F0      		brlo .L4
+  26 0006 8230      		cpi r24,lo8(2)
+  27 0008 01F0      		breq .L5
+  28 000a 8330      		cpi r24,lo8(3)
+  29 000c 01F4      		brne .L13
+  21:../code/MCAL/EXTI/exti.c ****     {
+  22:../code/MCAL/EXTI/exti.c ****     case EXTI_LOW_LEVEL: /*ISC00 and ISC01 sould be 0*/
+  23:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC00);
+  24:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC01);
+  25:../code/MCAL/EXTI/exti.c ****         break;
+  26:../code/MCAL/EXTI/exti.c ****     case EXTI_CHANGING: /*ISC00 sould be 1 and ISC01 sould be 0*/
+  27:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC00);
+  30               		.loc 1 27 0
+  31 000e 85B7      		in r24,0x35
+  32               	.LVL1:
+  33 0010 8160      		ori r24,lo8(1)
+  34 0012 00C0      		rjmp .L11
+  35               	.LVL2:
+  36               	.L4:
+  23:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC01);
+  37               		.loc 1 23 0
+  38 0014 85B7      		in r24,0x35
+  39               	.LVL3:
+  40 0016 8E7F      		andi r24,lo8(-2)
+  41               	.L11:
+  42               		.loc 1 27 0
+  43 0018 85BF      		out 0x35,r24
+  28:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC01);
+  44               		.loc 1 28 0
+  45 001a 85B7      		in r24,0x35
+  46 001c 8D7F      		andi r24,lo8(-3)
+  47 001e 00C0      		rjmp .L10
+  48               	.LVL4:
+  49               	.L3:
+  29:../code/MCAL/EXTI/exti.c ****         break;
+  30:../code/MCAL/EXTI/exti.c ****     case EXTI_FALLING_EDGE: /*ISC00 sould be 0 and ISC01 sould be 1*/
+  31:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC00);
+  50               		.loc 1 31 0
+  51 0020 85B7      		in r24,0x35
+  52               	.LVL5:
+  53 0022 8E7F      		andi r24,lo8(-2)
+  54 0024 00C0      		rjmp .L9
+  55               	.LVL6:
+  56               	.L5:
+  32:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC01);
+  33:../code/MCAL/EXTI/exti.c ****         break;
+  34:../code/MCAL/EXTI/exti.c ****     case EXTI_RISING_EDGE: /*ISC00 and ISC01 sould be 1*/
+  35:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC00);
+  57               		.loc 1 35 0
+  58 0026 85B7      		in r24,0x35
+  59               	.LVL7:
+  60 0028 8160      		ori r24,lo8(1)
+  61               	.L9:
+  62 002a 85BF      		out 0x35,r24
+  36:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC01);
+  63               		.loc 1 36 0
+  64 002c 85B7      		in r24,0x35
+  65 002e 8260      		ori r24,lo8(2)
+  66               	.L10:
+  67 0030 85BF      		out 0x35,r24
+  17:../code/MCAL/EXTI/exti.c **** 
+  68               		.loc 1 17 0
+  69 0032 80E0      		ldi r24,0
+  37:../code/MCAL/EXTI/exti.c ****         break;
+  70               		.loc 1 37 0
+  71 0034 00C0      		rjmp .L2
+  72               	.LVL8:
+  73               	.L13:
+  38:../code/MCAL/EXTI/exti.c **** 
+  39:../code/MCAL/EXTI/exti.c ****     default:
+  40:../code/MCAL/EXTI/exti.c ****         /*passed sense control is wrong*/
+  41:../code/MCAL/EXTI/exti.c ****         ret = EXTI_WRONG_SENSE_CTRL;
+  74               		.loc 1 41 0
+  75 0036 81E0      		ldi r24,lo8(1)
+  76               	.LVL9:
+  77               	.L2:
+  42:../code/MCAL/EXTI/exti.c ****         break;
+  43:../code/MCAL/EXTI/exti.c ****     }
+  44:../code/MCAL/EXTI/exti.c **** 
+  45:../code/MCAL/EXTI/exti.c ****     /*enable the extirnal interrupt 0 by setting 1 to bit INT0*/
+  46:../code/MCAL/EXTI/exti.c ****     SET_BIT(GICR, INT0);
+  78               		.loc 1 46 0
+  79 0038 9BB7      		in r25,0x3b
+  80 003a 9064      		ori r25,lo8(64)
+  81 003c 9BBF      		out 0x3b,r25
+  47:../code/MCAL/EXTI/exti.c **** 
+  48:../code/MCAL/EXTI/exti.c ****     return ret;
+  49:../code/MCAL/EXTI/exti.c **** }
+  82               		.loc 1 49 0
+  83 003e 0895      		ret
+  84               		.cfi_endproc
+  85               	.LFE0:
+  87               	.global	EXTI1_init
+  89               	EXTI1_init:
+  90               	.LFB1:
+  50:../code/MCAL/EXTI/exti.c **** 
+  51:../code/MCAL/EXTI/exti.c **** EN_extiError_t EXTI1_init(EN_senseControl_t senseControl)
+  52:../code/MCAL/EXTI/exti.c **** {
+  91               		.loc 1 52 0
+  92               		.cfi_startproc
+  93               	.LVL10:
+  94               	/* prologue: function */
+  95               	/* frame size = 0 */
+  96               	/* stack size = 0 */
+  97               	.L__stack_usage = 0
+  53:../code/MCAL/EXTI/exti.c ****     EN_extiError_t ret = EXTI_OK;
+  54:../code/MCAL/EXTI/exti.c ****     switch (senseControl)
+  98               		.loc 1 54 0
+  99 0040 8130      		cpi r24,lo8(1)
+ 100 0042 01F0      		breq .L16
+ 101 0044 00F0      		brlo .L17
+ 102 0046 8230      		cpi r24,lo8(2)
+ 103 0048 01F0      		breq .L18
+ 104 004a 8330      		cpi r24,lo8(3)
+ 105 004c 01F4      		brne .L25
+  55:../code/MCAL/EXTI/exti.c ****     {
+  56:../code/MCAL/EXTI/exti.c ****     case EXTI_LOW_LEVEL: /*ISC10 and ISC11 sould be 0*/
+  57:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC10);
+  58:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC11);
+  59:../code/MCAL/EXTI/exti.c ****         break;
+  60:../code/MCAL/EXTI/exti.c ****     case EXTI_CHANGING: /*ISC10 sould be 1 and ISC11 sould be 0*/
+  61:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC10);
+ 106               		.loc 1 61 0
+ 107 004e 85B7      		in r24,0x35
+ 108               	.LVL11:
+ 109 0050 8460      		ori r24,lo8(4)
+ 110 0052 00C0      		rjmp .L24
+ 111               	.LVL12:
+ 112               	.L17:
+  57:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC11);
+ 113               		.loc 1 57 0
+ 114 0054 85B7      		in r24,0x35
+ 115               	.LVL13:
+ 116 0056 8B7F      		andi r24,lo8(-5)
+ 117               	.L24:
+ 118               		.loc 1 61 0
+ 119 0058 85BF      		out 0x35,r24
+  62:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC11);
+ 120               		.loc 1 62 0
+ 121 005a 85B7      		in r24,0x35
+ 122 005c 877F      		andi r24,lo8(-9)
+ 123 005e 00C0      		rjmp .L23
+ 124               	.LVL14:
+ 125               	.L16:
+  63:../code/MCAL/EXTI/exti.c ****         break;
+  64:../code/MCAL/EXTI/exti.c ****     case EXTI_FALLING_EDGE: /*ISC10 sould be 0 and ISC11 sould be 1*/
+  65:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCR, ISC10);
+ 126               		.loc 1 65 0
+ 127 0060 85B7      		in r24,0x35
+ 128               	.LVL15:
+ 129 0062 8B7F      		andi r24,lo8(-5)
+ 130 0064 00C0      		rjmp .L22
+ 131               	.LVL16:
+ 132               	.L18:
+  66:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC11);
+  67:../code/MCAL/EXTI/exti.c ****         break;
+  68:../code/MCAL/EXTI/exti.c ****     case EXTI_RISING_EDGE: /*ISC10 and ISC11 sould be 1*/
+  69:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC10);
+ 133               		.loc 1 69 0
+ 134 0066 85B7      		in r24,0x35
+ 135               	.LVL17:
+ 136 0068 8460      		ori r24,lo8(4)
+ 137               	.L22:
+ 138 006a 85BF      		out 0x35,r24
+  70:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCR, ISC11);
+ 139               		.loc 1 70 0
+ 140 006c 85B7      		in r24,0x35
+ 141 006e 8860      		ori r24,lo8(8)
+ 142               	.L23:
+ 143 0070 85BF      		out 0x35,r24
+  53:../code/MCAL/EXTI/exti.c ****     switch (senseControl)
+ 144               		.loc 1 53 0
+ 145 0072 80E0      		ldi r24,0
+  71:../code/MCAL/EXTI/exti.c ****         break;
+ 146               		.loc 1 71 0
+ 147 0074 00C0      		rjmp .L15
+ 148               	.LVL18:
+ 149               	.L25:
+  72:../code/MCAL/EXTI/exti.c **** 
+  73:../code/MCAL/EXTI/exti.c ****     default:
+  74:../code/MCAL/EXTI/exti.c ****         /*passed sense control is wrong*/
+  75:../code/MCAL/EXTI/exti.c ****         ret = EXTI_WRONG_SENSE_CTRL;
+ 150               		.loc 1 75 0
+ 151 0076 81E0      		ldi r24,lo8(1)
+ 152               	.LVL19:
+ 153               	.L15:
+  76:../code/MCAL/EXTI/exti.c ****         break;
+  77:../code/MCAL/EXTI/exti.c ****     }
+  78:../code/MCAL/EXTI/exti.c **** 
+  79:../code/MCAL/EXTI/exti.c ****     /*enable the extirnal interrupt 1 by setting 1 to bit INT1*/
+  80:../code/MCAL/EXTI/exti.c ****     SET_BIT(GICR, INT1);
+ 154               		.loc 1 80 0
+ 155 0078 9BB7      		in r25,0x3b
+ 156 007a 9068      		ori r25,lo8(-128)
+ 157 007c 9BBF      		out 0x3b,r25
+  81:../code/MCAL/EXTI/exti.c **** 
+  82:../code/MCAL/EXTI/exti.c ****     return ret;
+  83:../code/MCAL/EXTI/exti.c **** }
+ 158               		.loc 1 83 0
+ 159 007e 0895      		ret
+ 160               		.cfi_endproc
+ 161               	.LFE1:
+ 163               	.global	EXTI2_init
+ 165               	EXTI2_init:
+ 166               	.LFB2:
+  84:../code/MCAL/EXTI/exti.c **** 
+  85:../code/MCAL/EXTI/exti.c **** EN_extiError_t EXTI2_init(EN_senseControl_t senseControl)
+  86:../code/MCAL/EXTI/exti.c **** {
+ 167               		.loc 1 86 0
+ 168               		.cfi_startproc
+ 169               	.LVL20:
+ 170               	/* prologue: function */
+ 171               	/* frame size = 0 */
+ 172               	/* stack size = 0 */
+ 173               	.L__stack_usage = 0
+  87:../code/MCAL/EXTI/exti.c ****     EN_extiError_t ret = EXTI_OK;
+  88:../code/MCAL/EXTI/exti.c **** 
+  89:../code/MCAL/EXTI/exti.c ****     /*switch over sense control*/
+  90:../code/MCAL/EXTI/exti.c ****     switch (senseControl)
+ 174               		.loc 1 90 0
+ 175 0080 8130      		cpi r24,lo8(1)
+ 176 0082 01F0      		breq .L28
+ 177 0084 8230      		cpi r24,lo8(2)
+ 178 0086 01F4      		brne .L33
+  91:../code/MCAL/EXTI/exti.c ****     {
+  92:../code/MCAL/EXTI/exti.c ****     case EXTI_FALLING_EDGE: /*ISC2 sould be 0*/
+  93:../code/MCAL/EXTI/exti.c ****         CLR_BIT(MCUCSR, ISC2);
+  94:../code/MCAL/EXTI/exti.c ****         break;
+  95:../code/MCAL/EXTI/exti.c ****     case EXTI_RISING_EDGE: /*ISC2 sould be 1*/
+  96:../code/MCAL/EXTI/exti.c ****         SET_BIT(MCUCSR, ISC2);
+ 179               		.loc 1 96 0
+ 180 0088 84B7      		in r24,0x34
+ 181               	.LVL21:
+ 182 008a 8064      		ori r24,lo8(64)
+ 183 008c 00C0      		rjmp .L32
+ 184               	.LVL22:
+ 185               	.L28:
+  93:../code/MCAL/EXTI/exti.c ****         break;
+ 186               		.loc 1 93 0
+ 187 008e 84B7      		in r24,0x34
+ 188               	.LVL23:
+ 189 0090 8F7B      		andi r24,lo8(-65)
+ 190               	.L32:
+ 191               		.loc 1 96 0
+ 192 0092 84BF      		out 0x34,r24
+  87:../code/MCAL/EXTI/exti.c ****     EN_extiError_t ret = EXTI_OK;
+ 193               		.loc 1 87 0
+ 194 0094 80E0      		ldi r24,0
+  97:../code/MCAL/EXTI/exti.c ****         break;
+ 195               		.loc 1 97 0
+ 196 0096 00C0      		rjmp .L27
+ 197               	.LVL24:
+ 198               	.L33:
+  98:../code/MCAL/EXTI/exti.c **** 
+  99:../code/MCAL/EXTI/exti.c ****     default:
+ 100:../code/MCAL/EXTI/exti.c ****         /*passed sense control is wrong (this interrupt has only falling and rising sense control n
+ 101:../code/MCAL/EXTI/exti.c ****         ret = EXTI_WRONG_SENSE_CTRL;
+ 199               		.loc 1 101 0
+ 200 0098 81E0      		ldi r24,lo8(1)
+ 201               	.LVL25:
+ 202               	.L27:
+ 102:../code/MCAL/EXTI/exti.c ****         break;
+ 103:../code/MCAL/EXTI/exti.c ****     }
+ 104:../code/MCAL/EXTI/exti.c **** 
+ 105:../code/MCAL/EXTI/exti.c ****     /*enable the extirnal interrupt 2 by setting 1 to bit INT2*/
+ 106:../code/MCAL/EXTI/exti.c ****     SET_BIT(GICR, INT2);
+ 203               		.loc 1 106 0
+ 204 009a 9BB7      		in r25,0x3b
+ 205 009c 9062      		ori r25,lo8(32)
+ 206 009e 9BBF      		out 0x3b,r25
+ 107:../code/MCAL/EXTI/exti.c **** 
+ 108:../code/MCAL/EXTI/exti.c ****     return ret;
+ 109:../code/MCAL/EXTI/exti.c **** }
+ 207               		.loc 1 109 0
+ 208 00a0 0895      		ret
+ 209               		.cfi_endproc
+ 210               	.LFE2:
+ 212               	.global	EXTI0_setCallBack
+ 214               	EXTI0_setCallBack:
+ 215               	.LFB3:
+ 110:../code/MCAL/EXTI/exti.c **** 
+ 111:../code/MCAL/EXTI/exti.c **** void EXTI0_setCallBack(void (*ptr_callBackFunction)(void))
+ 112:../code/MCAL/EXTI/exti.c **** {
+ 216               		.loc 1 112 0
+ 217               		.cfi_startproc
+ 218               	.LVL26:
+ 219               	/* prologue: function */
+ 220               	/* frame size = 0 */
+ 221               	/* stack size = 0 */
+ 222               	.L__stack_usage = 0
+ 113:../code/MCAL/EXTI/exti.c ****     /*setting the call back function with the user function*/
+ 114:../code/MCAL/EXTI/exti.c ****     EXTI0_func = ptr_callBackFunction;
+ 223               		.loc 1 114 0
+ 224 00a2 9093 0000 		sts EXTI0_func+1,r25
+ 225 00a6 8093 0000 		sts EXTI0_func,r24
+ 226 00aa 0895      		ret
+ 227               		.cfi_endproc
+ 228               	.LFE3:
+ 230               	.global	__vector_1
+ 232               	__vector_1:
+ 233               	.LFB4:
+ 115:../code/MCAL/EXTI/exti.c **** }
+ 116:../code/MCAL/EXTI/exti.c **** 
+ 117:../code/MCAL/EXTI/exti.c **** void __vector_1(void)
+ 118:../code/MCAL/EXTI/exti.c **** {
+ 234               		.loc 1 118 0
+ 235               		.cfi_startproc
+ 236 00ac 1F92      		push r1
+ 237               	.LCFI0:
+ 238               		.cfi_def_cfa_offset 3
+ 239               		.cfi_offset 1, -2
+ 240 00ae 0F92      		push r0
+ 241               	.LCFI1:
+ 242               		.cfi_def_cfa_offset 4
+ 243               		.cfi_offset 0, -3
+ 244 00b0 0FB6      		in r0,__SREG__
+ 245 00b2 0F92      		push r0
+ 246 00b4 1124      		clr __zero_reg__
+ 247 00b6 2F93      		push r18
+ 248               	.LCFI2:
+ 249               		.cfi_def_cfa_offset 5
+ 250               		.cfi_offset 18, -4
+ 251 00b8 3F93      		push r19
+ 252               	.LCFI3:
+ 253               		.cfi_def_cfa_offset 6
+ 254               		.cfi_offset 19, -5
+ 255 00ba 4F93      		push r20
+ 256               	.LCFI4:
+ 257               		.cfi_def_cfa_offset 7
+ 258               		.cfi_offset 20, -6
+ 259 00bc 5F93      		push r21
+ 260               	.LCFI5:
+ 261               		.cfi_def_cfa_offset 8
+ 262               		.cfi_offset 21, -7
+ 263 00be 6F93      		push r22
+ 264               	.LCFI6:
+ 265               		.cfi_def_cfa_offset 9
+ 266               		.cfi_offset 22, -8
+ 267 00c0 7F93      		push r23
+ 268               	.LCFI7:
+ 269               		.cfi_def_cfa_offset 10
+ 270               		.cfi_offset 23, -9
+ 271 00c2 8F93      		push r24
+ 272               	.LCFI8:
+ 273               		.cfi_def_cfa_offset 11
+ 274               		.cfi_offset 24, -10
+ 275 00c4 9F93      		push r25
+ 276               	.LCFI9:
+ 277               		.cfi_def_cfa_offset 12
+ 278               		.cfi_offset 25, -11
+ 279 00c6 AF93      		push r26
+ 280               	.LCFI10:
+ 281               		.cfi_def_cfa_offset 13
+ 282               		.cfi_offset 26, -12
+ 283 00c8 BF93      		push r27
+ 284               	.LCFI11:
+ 285               		.cfi_def_cfa_offset 14
+ 286               		.cfi_offset 27, -13
+ 287 00ca EF93      		push r30
+ 288               	.LCFI12:
+ 289               		.cfi_def_cfa_offset 15
+ 290               		.cfi_offset 30, -14
+ 291 00cc FF93      		push r31
+ 292               	.LCFI13:
+ 293               		.cfi_def_cfa_offset 16
+ 294               		.cfi_offset 31, -15
+ 295               	/* prologue: Signal */
+ 296               	/* frame size = 0 */
+ 297               	/* stack size = 15 */
+ 298               	.L__stack_usage = 15
+ 119:../code/MCAL/EXTI/exti.c ****     /*called when INTF0 is set to one*/
+ 120:../code/MCAL/EXTI/exti.c ****     if (EXTI0_func != NULL)
+ 299               		.loc 1 120 0
+ 300 00ce E091 0000 		lds r30,EXTI0_func
+ 301 00d2 F091 0000 		lds r31,EXTI0_func+1
+ 302 00d6 3097      		sbiw r30,0
+ 303 00d8 01F0      		breq .L35
+ 121:../code/MCAL/EXTI/exti.c ****         EXTI0_func();
+ 304               		.loc 1 121 0
+ 305 00da 0995      		icall
+ 306               	.LVL27:
+ 307               	.L35:
+ 308               	/* epilogue start */
+ 122:../code/MCAL/EXTI/exti.c **** }
+ 309               		.loc 1 122 0
+ 310 00dc FF91      		pop r31
+ 311 00de EF91      		pop r30
+ 312 00e0 BF91      		pop r27
+ 313 00e2 AF91      		pop r26
+ 314 00e4 9F91      		pop r25
+ 315 00e6 8F91      		pop r24
+ 316 00e8 7F91      		pop r23
+ 317 00ea 6F91      		pop r22
+ 318 00ec 5F91      		pop r21
+ 319 00ee 4F91      		pop r20
+ 320 00f0 3F91      		pop r19
+ 321 00f2 2F91      		pop r18
+ 322 00f4 0F90      		pop r0
+ 323 00f6 0FBE      		out __SREG__,r0
+ 324 00f8 0F90      		pop r0
+ 325 00fa 1F90      		pop r1
+ 326 00fc 1895      		reti
+ 327               		.cfi_endproc
+ 328               	.LFE4:
+ 330               	.global	EXTI1_setCallBack
+ 332               	EXTI1_setCallBack:
+ 333               	.LFB5:
+ 123:../code/MCAL/EXTI/exti.c **** 
+ 124:../code/MCAL/EXTI/exti.c **** void EXTI1_setCallBack(void (*ptr_callBackFunction)(void))
+ 125:../code/MCAL/EXTI/exti.c **** {
+ 334               		.loc 1 125 0
+ 335               		.cfi_startproc
+ 336               	.LVL28:
+ 337               	/* prologue: function */
+ 338               	/* frame size = 0 */
+ 339               	/* stack size = 0 */
+ 340               	.L__stack_usage = 0
+ 126:../code/MCAL/EXTI/exti.c ****     /*setting the call back function with the user function*/
+ 127:../code/MCAL/EXTI/exti.c ****     EXTI1_func = ptr_callBackFunction;
+ 341               		.loc 1 127 0
+ 342 00fe 9093 0000 		sts EXTI1_func+1,r25
+ 343 0102 8093 0000 		sts EXTI1_func,r24
+ 344 0106 0895      		ret
+ 345               		.cfi_endproc
+ 346               	.LFE5:
+ 348               	.global	__vector_2
+ 350               	__vector_2:
+ 351               	.LFB6:
+ 128:../code/MCAL/EXTI/exti.c **** }
+ 129:../code/MCAL/EXTI/exti.c **** 
+ 130:../code/MCAL/EXTI/exti.c **** void __vector_2(void)
+ 131:../code/MCAL/EXTI/exti.c **** {
+ 352               		.loc 1 131 0
+ 353               		.cfi_startproc
+ 354 0108 1F92      		push r1
+ 355               	.LCFI14:
+ 356               		.cfi_def_cfa_offset 3
+ 357               		.cfi_offset 1, -2
+ 358 010a 0F92      		push r0
+ 359               	.LCFI15:
+ 360               		.cfi_def_cfa_offset 4
+ 361               		.cfi_offset 0, -3
+ 362 010c 0FB6      		in r0,__SREG__
+ 363 010e 0F92      		push r0
+ 364 0110 1124      		clr __zero_reg__
+ 365 0112 2F93      		push r18
+ 366               	.LCFI16:
+ 367               		.cfi_def_cfa_offset 5
+ 368               		.cfi_offset 18, -4
+ 369 0114 3F93      		push r19
+ 370               	.LCFI17:
+ 371               		.cfi_def_cfa_offset 6
+ 372               		.cfi_offset 19, -5
+ 373 0116 4F93      		push r20
+ 374               	.LCFI18:
+ 375               		.cfi_def_cfa_offset 7
+ 376               		.cfi_offset 20, -6
+ 377 0118 5F93      		push r21
+ 378               	.LCFI19:
+ 379               		.cfi_def_cfa_offset 8
+ 380               		.cfi_offset 21, -7
+ 381 011a 6F93      		push r22
+ 382               	.LCFI20:
+ 383               		.cfi_def_cfa_offset 9
+ 384               		.cfi_offset 22, -8
+ 385 011c 7F93      		push r23
+ 386               	.LCFI21:
+ 387               		.cfi_def_cfa_offset 10
+ 388               		.cfi_offset 23, -9
+ 389 011e 8F93      		push r24
+ 390               	.LCFI22:
+ 391               		.cfi_def_cfa_offset 11
+ 392               		.cfi_offset 24, -10
+ 393 0120 9F93      		push r25
+ 394               	.LCFI23:
+ 395               		.cfi_def_cfa_offset 12
+ 396               		.cfi_offset 25, -11
+ 397 0122 AF93      		push r26
+ 398               	.LCFI24:
+ 399               		.cfi_def_cfa_offset 13
+ 400               		.cfi_offset 26, -12
+ 401 0124 BF93      		push r27
+ 402               	.LCFI25:
+ 403               		.cfi_def_cfa_offset 14
+ 404               		.cfi_offset 27, -13
+ 405 0126 EF93      		push r30
+ 406               	.LCFI26:
+ 407               		.cfi_def_cfa_offset 15
+ 408               		.cfi_offset 30, -14
+ 409 0128 FF93      		push r31
+ 410               	.LCFI27:
+ 411               		.cfi_def_cfa_offset 16
+ 412               		.cfi_offset 31, -15
+ 413               	/* prologue: Signal */
+ 414               	/* frame size = 0 */
+ 415               	/* stack size = 15 */
+ 416               	.L__stack_usage = 15
+ 132:../code/MCAL/EXTI/exti.c ****     /*called when INTF1 is set to one*/
+ 133:../code/MCAL/EXTI/exti.c ****     if (EXTI1_func != NULL)
+ 417               		.loc 1 133 0
+ 418 012a E091 0000 		lds r30,EXTI1_func
+ 419 012e F091 0000 		lds r31,EXTI1_func+1
+ 420 0132 3097      		sbiw r30,0
+ 421 0134 01F0      		breq .L41
+ 134:../code/MCAL/EXTI/exti.c ****         EXTI1_func();
+ 422               		.loc 1 134 0
+ 423 0136 0995      		icall
+ 424               	.LVL29:
+ 425               	.L41:
+ 426               	/* epilogue start */
+ 135:../code/MCAL/EXTI/exti.c **** }
+ 427               		.loc 1 135 0
+ 428 0138 FF91      		pop r31
+ 429 013a EF91      		pop r30
+ 430 013c BF91      		pop r27
+ 431 013e AF91      		pop r26
+ 432 0140 9F91      		pop r25
+ 433 0142 8F91      		pop r24
+ 434 0144 7F91      		pop r23
+ 435 0146 6F91      		pop r22
+ 436 0148 5F91      		pop r21
+ 437 014a 4F91      		pop r20
+ 438 014c 3F91      		pop r19
+ 439 014e 2F91      		pop r18
+ 440 0150 0F90      		pop r0
+ 441 0152 0FBE      		out __SREG__,r0
+ 442 0154 0F90      		pop r0
+ 443 0156 1F90      		pop r1
+ 444 0158 1895      		reti
+ 445               		.cfi_endproc
+ 446               	.LFE6:
+ 448               	.global	EXTI2_setCallBack
+ 450               	EXTI2_setCallBack:
+ 451               	.LFB7:
+ 136:../code/MCAL/EXTI/exti.c **** 
+ 137:../code/MCAL/EXTI/exti.c **** void EXTI2_setCallBack(void (*ptr_callBackFunction)(void))
+ 138:../code/MCAL/EXTI/exti.c **** {
+ 452               		.loc 1 138 0
+ 453               		.cfi_startproc
+ 454               	.LVL30:
+ 455               	/* prologue: function */
+ 456               	/* frame size = 0 */
+ 457               	/* stack size = 0 */
+ 458               	.L__stack_usage = 0
+ 139:../code/MCAL/EXTI/exti.c ****     /*setting the call back function with the user function*/
+ 140:../code/MCAL/EXTI/exti.c ****     EXTI2_func = ptr_callBackFunction;
+ 459               		.loc 1 140 0
+ 460 015a 9093 0000 		sts EXTI2_func+1,r25
+ 461 015e 8093 0000 		sts EXTI2_func,r24
+ 462 0162 0895      		ret
+ 463               		.cfi_endproc
+ 464               	.LFE7:
+ 466               	.global	__vector_3
+ 468               	__vector_3:
+ 469               	.LFB8:
+ 141:../code/MCAL/EXTI/exti.c **** }
+ 142:../code/MCAL/EXTI/exti.c **** 
+ 143:../code/MCAL/EXTI/exti.c **** void __vector_3(void)
+ 144:../code/MCAL/EXTI/exti.c **** {
+ 470               		.loc 1 144 0
+ 471               		.cfi_startproc
+ 472 0164 1F92      		push r1
+ 473               	.LCFI28:
+ 474               		.cfi_def_cfa_offset 3
+ 475               		.cfi_offset 1, -2
+ 476 0166 0F92      		push r0
+ 477               	.LCFI29:
+ 478               		.cfi_def_cfa_offset 4
+ 479               		.cfi_offset 0, -3
+ 480 0168 0FB6      		in r0,__SREG__
+ 481 016a 0F92      		push r0
+ 482 016c 1124      		clr __zero_reg__
+ 483 016e 2F93      		push r18
+ 484               	.LCFI30:
+ 485               		.cfi_def_cfa_offset 5
+ 486               		.cfi_offset 18, -4
+ 487 0170 3F93      		push r19
+ 488               	.LCFI31:
+ 489               		.cfi_def_cfa_offset 6
+ 490               		.cfi_offset 19, -5
+ 491 0172 4F93      		push r20
+ 492               	.LCFI32:
+ 493               		.cfi_def_cfa_offset 7
+ 494               		.cfi_offset 20, -6
+ 495 0174 5F93      		push r21
+ 496               	.LCFI33:
+ 497               		.cfi_def_cfa_offset 8
+ 498               		.cfi_offset 21, -7
+ 499 0176 6F93      		push r22
+ 500               	.LCFI34:
+ 501               		.cfi_def_cfa_offset 9
+ 502               		.cfi_offset 22, -8
+ 503 0178 7F93      		push r23
+ 504               	.LCFI35:
+ 505               		.cfi_def_cfa_offset 10
+ 506               		.cfi_offset 23, -9
+ 507 017a 8F93      		push r24
+ 508               	.LCFI36:
+ 509               		.cfi_def_cfa_offset 11
+ 510               		.cfi_offset 24, -10
+ 511 017c 9F93      		push r25
+ 512               	.LCFI37:
+ 513               		.cfi_def_cfa_offset 12
+ 514               		.cfi_offset 25, -11
+ 515 017e AF93      		push r26
+ 516               	.LCFI38:
+ 517               		.cfi_def_cfa_offset 13
+ 518               		.cfi_offset 26, -12
+ 519 0180 BF93      		push r27
+ 520               	.LCFI39:
+ 521               		.cfi_def_cfa_offset 14
+ 522               		.cfi_offset 27, -13
+ 523 0182 EF93      		push r30
+ 524               	.LCFI40:
+ 525               		.cfi_def_cfa_offset 15
+ 526               		.cfi_offset 30, -14
+ 527 0184 FF93      		push r31
+ 528               	.LCFI41:
+ 529               		.cfi_def_cfa_offset 16
+ 530               		.cfi_offset 31, -15
+ 531               	/* prologue: Signal */
+ 532               	/* frame size = 0 */
+ 533               	/* stack size = 15 */
+ 534               	.L__stack_usage = 15
+ 145:../code/MCAL/EXTI/exti.c ****     /*called when INTF2 is set to one*/
+ 146:../code/MCAL/EXTI/exti.c ****     if (EXTI2_func != NULL)
+ 535               		.loc 1 146 0
+ 536 0186 E091 0000 		lds r30,EXTI2_func
+ 537 018a F091 0000 		lds r31,EXTI2_func+1
+ 538 018e 3097      		sbiw r30,0
+ 539 0190 01F0      		breq .L47
+ 147:../code/MCAL/EXTI/exti.c ****         EXTI2_func();
+ 540               		.loc 1 147 0
+ 541 0192 0995      		icall
+ 542               	.LVL31:
+ 543               	.L47:
+ 544               	/* epilogue start */
+ 148:../code/MCAL/EXTI/exti.c **** }...
+ 545               		.loc 1 148 0
+ 546 0194 FF91      		pop r31
+ 547 0196 EF91      		pop r30
+ 548 0198 BF91      		pop r27
+ 549 019a AF91      		pop r26
+ 550 019c 9F91      		pop r25
+ 551 019e 8F91      		pop r24
+ 552 01a0 7F91      		pop r23
+ 553 01a2 6F91      		pop r22
+ 554 01a4 5F91      		pop r21
+ 555 01a6 4F91      		pop r20
+ 556 01a8 3F91      		pop r19
+ 557 01aa 2F91      		pop r18
+ 558 01ac 0F90      		pop r0
+ 559 01ae 0FBE      		out __SREG__,r0
+ 560 01b0 0F90      		pop r0
+ 561 01b2 1F90      		pop r1
+ 562 01b4 1895      		reti
+ 563               		.cfi_endproc
+ 564               	.LFE8:
+ 566               	.global	EXTI2_func
+ 567               		.section .bss
+ 570               	EXTI2_func:
+ 571 0000 0000      		.zero	2
+ 572               	.global	EXTI1_func
+ 575               	EXTI1_func:
+ 576 0002 0000      		.zero	2
+ 577               	.global	EXTI0_func
+ 580               	EXTI0_func:
+ 581 0004 0000      		.zero	2
+ 582               		.text
+ 583               	.Letext0:
+ 584               		.file 2 "../code/MCAL/EXTI/../../UTALITIES/types.h"
+ 585               		.file 3 "../code/MCAL/EXTI/exti.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 exti.c
+     /tmp/ccx7JMtY.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccx7JMtY.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccx7JMtY.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccx7JMtY.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccx7JMtY.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccx7JMtY.s:12     .text:0000000000000000 EXTI0_init
+     /tmp/ccx7JMtY.s:89     .text:0000000000000040 EXTI1_init
+     /tmp/ccx7JMtY.s:165    .text:0000000000000080 EXTI2_init
+     /tmp/ccx7JMtY.s:214    .text:00000000000000a2 EXTI0_setCallBack
+     /tmp/ccx7JMtY.s:580    .bss:0000000000000004 EXTI0_func
+     /tmp/ccx7JMtY.s:232    .text:00000000000000ac __vector_1
+     /tmp/ccx7JMtY.s:332    .text:00000000000000fe EXTI1_setCallBack
+     /tmp/ccx7JMtY.s:575    .bss:0000000000000002 EXTI1_func
+     /tmp/ccx7JMtY.s:350    .text:0000000000000108 __vector_2
+     /tmp/ccx7JMtY.s:450    .text:000000000000015a EXTI2_setCallBack
+     /tmp/ccx7JMtY.s:570    .bss:0000000000000000 EXTI2_func
+     /tmp/ccx7JMtY.s:468    .text:0000000000000164 __vector_3
+
+UNDEFINED SYMBOLS
+__do_clear_bss

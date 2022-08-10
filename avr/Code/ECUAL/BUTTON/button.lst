@@ -1,0 +1,188 @@
+   1               		.file	"button.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	BUTTON_init
+  12               	BUTTON_init:
+  13               	.LFB0:
+  14               		.file 1 "../code/ECUAL/BUTTON/button.c"
+   1:../code/ECUAL/BUTTON/button.c **** 
+   2:../code/ECUAL/BUTTON/button.c **** #include "button.h"
+   3:../code/ECUAL/BUTTON/button.c **** 
+   4:../code/ECUAL/BUTTON/button.c **** EN_buttonError_t BUTTON_init(ST_button_t button)
+   5:../code/ECUAL/BUTTON/button.c **** {
+  15               		.loc 1 5 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22 0000 862F      		mov r24,r22
+  23 0002 672F      		mov r22,r23
+  24               	.LVL1:
+   6:../code/ECUAL/BUTTON/button.c ****     /* function skeleton
+   7:../code/ECUAL/BUTTON/button.c ****      * 1-call GPIO_initPin and pass buttonPin, buttonPort, and IN as the direction
+   8:../code/ECUAL/BUTTON/button.c ****      * 2-switch over the flag (return of GPIO_initPin)
+   9:../code/ECUAL/BUTTON/button.c ****      *      2.1-in each case fill the result with the corresponding EN_ledError_t
+  10:../code/ECUAL/BUTTON/button.c ****      * 3-return the result
+  11:../code/ECUAL/BUTTON/button.c ****      */
+  12:../code/ECUAL/BUTTON/button.c **** 
+  13:../code/ECUAL/BUTTON/button.c ****     EN_buttonError_t ret = BUTTON_OK;
+  14:../code/ECUAL/BUTTON/button.c ****     EN_gpioError_t flag;
+  15:../code/ECUAL/BUTTON/button.c **** 
+  16:../code/ECUAL/BUTTON/button.c ****     /* 1-call GPIO_initPin and pass buttonPin, buttonPort, and IN as the direction (button is an in
+  17:../code/ECUAL/BUTTON/button.c ****     flag = GPIO_initPin(button.buttonPin, button.buttonPort, IN);
+  25               		.loc 1 17 0
+  26 0004 40E0      		ldi r20,0
+  27 0006 0E94 0000 		call GPIO_initPin
+  28               	.LVL2:
+  18:../code/ECUAL/BUTTON/button.c **** 
+  19:../code/ECUAL/BUTTON/button.c ****     /* 2-switch over the flag (return of GPIO_initPin) */
+  20:../code/ECUAL/BUTTON/button.c ****     switch (flag)
+  29               		.loc 1 20 0
+  30 000a 8130      		cpi r24,lo8(1)
+  31 000c 01F0      		breq .L3
+  32 000e 8230      		cpi r24,lo8(2)
+  33 0010 01F4      		brne .L8
+  34               	.LVL3:
+  21:../code/ECUAL/BUTTON/button.c ****     {
+  22:../code/ECUAL/BUTTON/button.c ****         /* 2.1-in each case fill the result with the corresponding EN_ledError_t */
+  23:../code/ECUAL/BUTTON/button.c ****     case GPIO_OK:
+  24:../code/ECUAL/BUTTON/button.c ****         ret = BUTTON_OK;
+  25:../code/ECUAL/BUTTON/button.c ****         break;
+  26:../code/ECUAL/BUTTON/button.c ****     case WRONG_PIN:
+  27:../code/ECUAL/BUTTON/button.c ****         ret = WRONG_BUTTON_PIN;
+  28:../code/ECUAL/BUTTON/button.c ****         break;
+  29:../code/ECUAL/BUTTON/button.c ****     case WRONG_PORT:
+  30:../code/ECUAL/BUTTON/button.c ****         ret = WRONG_BUTTON_PORT;
+  35               		.loc 1 30 0
+  36 0012 82E0      		ldi r24,lo8(2)
+  37               	.LVL4:
+  38 0014 0895      		ret
+  39               	.LVL5:
+  40               	.L3:
+  27:../code/ECUAL/BUTTON/button.c ****         break;
+  41               		.loc 1 27 0
+  42 0016 81E0      		ldi r24,lo8(1)
+  43               	.LVL6:
+  44 0018 0895      		ret
+  45               	.LVL7:
+  46               	.L8:
+  13:../code/ECUAL/BUTTON/button.c ****     EN_gpioError_t flag;
+  47               		.loc 1 13 0
+  48 001a 80E0      		ldi r24,0
+  49               	.LVL8:
+  31:../code/ECUAL/BUTTON/button.c ****     default:
+  32:../code/ECUAL/BUTTON/button.c ****         break;
+  33:../code/ECUAL/BUTTON/button.c ****     }
+  34:../code/ECUAL/BUTTON/button.c **** 
+  35:../code/ECUAL/BUTTON/button.c ****     /* 3-return the result */
+  36:../code/ECUAL/BUTTON/button.c ****     return ret;
+  37:../code/ECUAL/BUTTON/button.c **** }
+  50               		.loc 1 37 0
+  51 001c 0895      		ret
+  52               		.cfi_endproc
+  53               	.LFE0:
+  55               	.global	BUTTON_getState
+  57               	BUTTON_getState:
+  58               	.LFB1:
+  38:../code/ECUAL/BUTTON/button.c **** EN_buttonError_t BUTTON_getState(ST_button_t *pButton)
+  39:../code/ECUAL/BUTTON/button.c **** {
+  59               		.loc 1 39 0
+  60               		.cfi_startproc
+  61               	.LVL9:
+  62               	/* prologue: function */
+  63               	/* frame size = 0 */
+  64               	/* stack size = 0 */
+  65               	.L__stack_usage = 0
+  40:../code/ECUAL/BUTTON/button.c ****     /* function skeleton
+  41:../code/ECUAL/BUTTON/button.c ****      * 1-call GPIO_readPin and pass buttonPin, buttonPort, and the address of buttonState to be the
+  42:../code/ECUAL/BUTTON/button.c ****      * 2-switch over the flag (return of GPIO_readPin)
+  43:../code/ECUAL/BUTTON/button.c ****      *      2.1-in each case fill the result with the corresponding EN_ledError_t
+  44:../code/ECUAL/BUTTON/button.c ****      * 3-return the result
+  45:../code/ECUAL/BUTTON/button.c ****      */
+  46:../code/ECUAL/BUTTON/button.c **** 
+  47:../code/ECUAL/BUTTON/button.c ****     EN_buttonError_t ret = BUTTON_OK;
+  48:../code/ECUAL/BUTTON/button.c ****     EN_gpioError_t flag;
+  49:../code/ECUAL/BUTTON/button.c **** 
+  50:../code/ECUAL/BUTTON/button.c ****     /* 1-call GPIO_readPin and pass buttonPin, buttonPort, and the address of buttonState to be the
+  51:../code/ECUAL/BUTTON/button.c ****     flag = GPIO_readPin(pButton->buttonPin, pButton->buttonPort, &pButton->buttonState);
+  66               		.loc 1 51 0
+  67 001e AC01      		movw r20,r24
+  68 0020 4E5F      		subi r20,-2
+  69 0022 5F4F      		sbci r21,-1
+  70 0024 FC01      		movw r30,r24
+  71 0026 6181      		ldd r22,Z+1
+  72 0028 8081      		ld r24,Z
+  73               	.LVL10:
+  74 002a 0E94 0000 		call GPIO_readPin
+  75               	.LVL11:
+  52:../code/ECUAL/BUTTON/button.c **** 
+  53:../code/ECUAL/BUTTON/button.c ****     /* 2-switch over the flag (return of GPIO_initPin) */
+  54:../code/ECUAL/BUTTON/button.c ****     switch (flag)
+  76               		.loc 1 54 0
+  77 002e 8130      		cpi r24,lo8(1)
+  78 0030 01F0      		breq .L11
+  79 0032 8230      		cpi r24,lo8(2)
+  80 0034 01F4      		brne .L15
+  81               	.LVL12:
+  55:../code/ECUAL/BUTTON/button.c ****     {
+  56:../code/ECUAL/BUTTON/button.c ****         /* 2.1-in each case fill the result with the corresponding EN_ledError_t */
+  57:../code/ECUAL/BUTTON/button.c ****     case GPIO_OK:
+  58:../code/ECUAL/BUTTON/button.c ****         ret = BUTTON_OK;
+  59:../code/ECUAL/BUTTON/button.c ****         break;
+  60:../code/ECUAL/BUTTON/button.c ****     case WRONG_PIN:
+  61:../code/ECUAL/BUTTON/button.c ****         ret = WRONG_BUTTON_PIN;
+  62:../code/ECUAL/BUTTON/button.c ****         break;
+  63:../code/ECUAL/BUTTON/button.c ****     case WRONG_PORT:
+  64:../code/ECUAL/BUTTON/button.c ****         ret = WRONG_BUTTON_PORT;
+  82               		.loc 1 64 0
+  83 0036 82E0      		ldi r24,lo8(2)
+  84               	.LVL13:
+  85 0038 0895      		ret
+  86               	.LVL14:
+  87               	.L11:
+  61:../code/ECUAL/BUTTON/button.c ****         break;
+  88               		.loc 1 61 0
+  89 003a 81E0      		ldi r24,lo8(1)
+  90               	.LVL15:
+  91 003c 0895      		ret
+  92               	.LVL16:
+  93               	.L15:
+  47:../code/ECUAL/BUTTON/button.c ****     EN_gpioError_t flag;
+  94               		.loc 1 47 0
+  95 003e 80E0      		ldi r24,0
+  96               	.LVL17:
+  65:../code/ECUAL/BUTTON/button.c ****     default:
+  66:../code/ECUAL/BUTTON/button.c ****         break;
+  67:../code/ECUAL/BUTTON/button.c ****     }
+  68:../code/ECUAL/BUTTON/button.c **** 
+  69:../code/ECUAL/BUTTON/button.c ****     /* 3-return the result */
+  70:../code/ECUAL/BUTTON/button.c ****     return ret;
+  71:../code/ECUAL/BUTTON/button.c **** }
+  97               		.loc 1 71 0
+  98 0040 0895      		ret
+  99               		.cfi_endproc
+ 100               	.LFE1:
+ 102               	.Letext0:
+ 103               		.file 2 "../code/ECUAL/BUTTON/../../MCAL/GPIO/gpio.h"
+ 104               		.file 3 "../code/ECUAL/BUTTON/button.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 button.c
+     /tmp/ccVe8CAt.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccVe8CAt.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccVe8CAt.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccVe8CAt.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccVe8CAt.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccVe8CAt.s:12     .text:0000000000000000 BUTTON_init
+     /tmp/ccVe8CAt.s:57     .text:000000000000001e BUTTON_getState
+
+UNDEFINED SYMBOLS
+GPIO_initPin
+GPIO_readPin
